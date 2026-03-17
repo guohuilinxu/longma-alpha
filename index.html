@@ -3,114 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>龙马 Longma Alpha - 智慧体</title>
+    <title>龙马 Longma Alpha - 全维智慧体</title>
     <style>
-        :root { --blue: #007aff; --bg: #ffffff; --text: #111; --gray: #848e9c; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 100px; }
-        .header { background: #fff; padding: 15px; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
+        :root { --blue: #007aff; --bg: #ffffff; --text: #111; --gray: #8e8e93; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; }
+        .header { padding: 15px; border-bottom: 1px solid #f2f2f7; position: sticky; top: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 100; }
         
-        /* 智慧体交互中心 */
-        .ai-core { background: #f2f2f7; border-radius: 16px; padding: 15px; margin: 10px 0; border: 1px solid #e5e5ea; }
-        .ai-status { font-size: 11px; color: var(--blue); font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
-        .ai-bubble { background: #fff; padding: 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.05); min-height: 20px; }
-        .ai-input-area { display: flex; align-items: center; gap: 10px; margin-top: 12px; background: #fff; padding: 8px 12px; border-radius: 10px; }
-        .ai-input-area input { border: none; flex: 1; outline: none; font-size: 14px; }
+        /* 智慧体核心：大脑视窗 */
+        .ai-brain { background: #000; color: #00ff00; margin: 15px; border-radius: 16px; padding: 20px; font-family: 'Courier New', monospace; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .ai-brain::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%; pointer-events: none; }
+        .brain-status { font-size: 10px; margin-bottom: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .brain-text { font-size: 14px; line-height: 1.6; min-height: 80px; }
         
-        .nav { display: flex; gap: 20px; overflow-x: auto; padding: 15px; border-bottom: 1px solid #eee; }
-        .nav-item { cursor: pointer; white-space: nowrap; font-size: 14px; color: var(--gray); padding-bottom: 8px; }
-        .nav-item.active { color: var(--blue); border-bottom: 2px solid var(--blue); font-weight: bold; }
+        /* 交互区 */
+        .input-wrap { margin: 0 15px; background: #f2f2f7; border-radius: 12px; display: flex; align-items: center; padding: 12px 15px; }
+        .input-wrap input { border: none; background: transparent; flex: 1; outline: none; font-size: 15px; font-weight: 500; }
+        
+        /* 建议卡片 */
+        .suggestion-box { margin: 20px 15px; display: none; }
+        .tag-row { display: flex; gap: 8px; margin-top: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .tag { background: #f2f2f7; padding: 6px 12px; border-radius: 8px; font-size: 12px; color: var(--blue); font-weight: bold; white-space: nowrap; }
 
-        .content { padding: 0 15px; }
-        .date-label { font-size: 12px; color: var(--gray); background: #eee; display: inline-block; padding: 2px 8px; border-radius: 4px; margin: 20px 0 10px 0; }
-        .info-card { border-left: 2px solid var(--blue); padding-left: 15px; margin-bottom: 25px; }
-        .card-box { background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 12px; font-size: 14px; }
-
-        /* 呼吸灯动画 */
-        .dot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 20px 0; border-top: 1px solid #eee; text-align: center; }
+        .btn-main { background: var(--blue); color: #fff; padding: 12px 60px; border-radius: 30px; text-decoration: none; font-weight: bold; }
+        
+        /* 动态光效 */
+        .thinking-dot { display: inline-block; width: 8px; height: 8px; background: #00ff00; border-radius: 50%; margin-right: 5px; box-shadow: 0 0 10px #00ff00; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div style="display: flex; justify-content: space-between; font-weight: bold;">
-        <span>龙马 Longma Alpha</span>
-        <span id="sol-price" style="color:var(--blue); font-size: 12px;">SOL $...</span>
-    </div>
-
-    <div class="ai-core">
-        <div class="ai-status"><div class="dot"></div> 龙马智慧体在线</div>
-        <div class="ai-bubble" id="aiResponse">你好，我是龙马。我已同步最近72小时的链上数据流，你想了解哪个标的的内幕？</div>
-        <div class="ai-input-area">
-            <input type="text" id="userInput" placeholder="与智慧体对话..." onkeyup="if(event.keyCode==13) aiChat()">
-            <span onclick="aiVoice()" style="cursor:pointer">🎙️</span>
-        </div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <b style="font-size: 20px;">龙马 Longma Alpha</b>
+        <div id="price-tag" style="font-size: 12px; background: #e5f1ff; color: var(--blue); padding: 2px 8px; border-radius: 4px;">数据同步中...</div>
     </div>
 </div>
 
-<div class="nav">
-    <div class="nav-item active" onclick="showAll()">社群广场</div>
-    <div class="nav-item" onclick="alert('智慧体：正在筛选钱包异动...')">钱包监控</div>
-    <div class="nav-item" onclick="alert('智慧体：正在计算共振指数...')">共振信号</div>
+<div class="ai-brain">
+    <div class="brain-status"><span class="thinking-dot"></span> System Ready | Full-Chain Scanning</div>
+    <div class="brain-text" id="aiOutput">你好。我是龙马。别问我过去怎么样，直接告诉我你现在关注哪个币种或地址，我帮你穿透迷雾，给出操作建议。</div>
 </div>
 
-<div class="content" id="feed">
-    <div class="date-label">3月17日</div>
-    <div class="info-card">
-        <div class="card-box"><b>AI 总结: $DSNT 深度解析</b><br>龙马抓取到项目方测试转账。筹码分布集中，主力合围迹象明显。建议关注 0.045 支撑。</div>
+<div class="input-wrap">
+    <input type="text" id="userInput" placeholder="输入币种、地址或你的困惑..." onkeyup="if(event.keyCode==13) askLongma()">
+    <span onclick="askLongma()" style="cursor:pointer; color:var(--blue); font-weight:bold;">咨询</span>
+</div>
+
+<div class="suggestion-box" id="suggestionBox">
+    <div style="font-size: 12px; color: #888; margin-bottom: 10px;">龙马·实时决策建议：</div>
+    <div id="recommendation" style="background: #fff; border: 2px solid #000; padding: 15px; border-radius: 12px; font-weight: bold; line-height: 1.5;"></div>
+    <div class="tag-row">
+        <div class="tag">深度投研报告</div>
+        <div class="tag">主力持仓分布</div>
+        <div class="tag">资金流向图</div>
     </div>
 </div>
 
-<div style="position: fixed; bottom: 20px; width: 100%; text-align: center;">
-    <a href="https://twitter.com/你的账号" style="background:var(--blue); color:#fff; padding:12px 30px; border-radius:25px; text-decoration:none; font-weight:bold; box-shadow: 0 4px 15px rgba(0,122,255,0.3);">关注龙马主理人</a>
+<div class="footer">
+    <a href="https://twitter.com/你的账号" class="btn-main">获取更多 Alpha</a>
 </div>
 
 <script>
-    const aiResponse = document.getElementById('aiResponse');
-    
-    // 智慧体对话逻辑
-    function aiChat() {
-        const input = document.getElementById('userInput').value;
-        if(!input) return;
-        
-        aiResponse.innerText = "龙马正在思考...";
-        
+    const aiOutput = document.getElementById('aiOutput');
+    const suggBox = document.getElementById('suggestionBox');
+    const recommendation = document.getElementById('recommendation');
+
+    function askLongma() {
+        const query = document.getElementById('userInput').value;
+        if(!query) return;
+
+        // 1. 模拟深度搜索过程
+        aiOutput.innerText = "> 正在接入全链节点...\n> 检索最近24小时交易异动...\n> 扫描 Twitter 情绪共鸣...\n> 正在构建逻辑矩阵...";
+        suggBox.style.display = 'none';
+
         setTimeout(() => {
-            if(input.toLowerCase().includes('dsnt')) {
-                typeWriter("关于 $DSNT，我发现主力在 0.041 附近的吸筹动作非常明显，这跟昨天的社区情绪完全相反。建议你点击下方的 3月17日 研报深入查看。");
-            } else if(input.includes('赚钱')) {
-                typeWriter("在币圈，认知差就是钱。现在的机会在‘金铲子’协议的锁仓异动上，我已经把监控放在‘钱包监控’栏目了。");
-            } else {
-                typeWriter("正在检索全链关于‘" + input + "’的异动... 目前该标的链上表现平稳，没有发现大户撤资。建议保持观望。");
-            }
+            // 2. 智慧体给出逻辑建议
+            const response = getSmartResponse(query);
+            typeWriter(response.thought, aiOutput, () => {
+                // 3. 弹出最终操作建议
+                suggBox.style.display = 'block';
+                recommendation.innerText = response.action;
+            });
             document.getElementById('userInput').value = "";
-        }, 1000);
+        }, 1500);
     }
 
-    // 模拟语音
-    function aiVoice() {
-        typeWriter("正在聆听您的指令... 请说出你想查询的币种。");
+    function getSmartResponse(q) {
+        q = q.toUpperCase();
+        if(q.includes('SOL')) {
+            return {
+                thought: "> SOL 链上活跃度持续走高，但 168 阻力位存在大量订单压制。龙马观测到 Alameda 关联地址有小额归集动作。",
+                action: "建议：现货继续持仓，合约在 162 附近寻找短波入场机会，跌破 158 止损。"
+            };
+        } else if(q.includes('买') || q.includes('赚')) {
+            return {
+                thought: "> 现在的市场不再是普涨行情。龙马建议关注‘链上筹码高度集中’且‘创始人已弃权’的 Meme 币种。监控名单已更新。",
+                action: "建议：不要梭哈！拿出 10% 仓位埋伏龙马今日推荐的 Alpha 清单，博取 5-10 倍收益。"
+            };
+        } else {
+            return {
+                thought: "> 正在对 " + q + " 进行多维审计... 社交媒体热度正在衰减，主力资金流向显示为【净流出】。技术面处于超买区。",
+                action: "建议：目前不宜盲目进场。建议等待回调至支撑位或观察 4H 线是否能站稳，风险等级：【中高】。"
+            };
+        }
     }
 
-    // 打字机效果
-    function typeWriter(text) {
-        aiResponse.innerText = "";
+    function typeWriter(text, element, callback) {
+        element.innerText = "";
         let i = 0;
         const timer = setInterval(() => {
             if (i < text.length) {
-                aiResponse.innerText += text.charAt(i);
+                element.innerText += text.charAt(i);
                 i++;
             } else {
                 clearInterval(timer);
+                if(callback) callback();
             }
-        }, 30);
+        }, 20);
     }
 
     async function getPrice() {
         try {
-            const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT');
+            const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
             const d = await r.json();
-            document.getElementById('sol-price').innerText = 'SOL $' + parseFloat(d.price).toFixed(2);
+            document.getElementById('price-tag').innerText = 'BTC $' + parseInt(d.price);
         } catch(e) {}
     }
     setInterval(getPrice, 5000); getPrice();
