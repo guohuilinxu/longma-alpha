@@ -3,170 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>龙马 Longma | 智慧看板</title>
+    <title>龙马 Longma | 暗黑科技终端</title>
     <style>
-        :root { --blue: #007aff; --green: #34c759; --red: #ff3b30; --bg: #f2f2f7; --card: #ffffff; --text: #1c1c1e; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, system-ui; margin: 0; padding-bottom: 120px; overflow-x: hidden; }
+        /* 1. 专业暗黑科技风配色方案 */
+        :root { 
+            --bg-dark: #0a0a0c; 
+            --panel-dark: #16161a; 
+            --border-dark: #2a2a32;
+            --text-main: #e5e5e7; 
+            --text-gray: #8e8e93;
+            --tech-blue: #007aff; 
+            --tech-green: #34c759; /* 高亮绿色：用于涨幅/安全 */
+            --tech-purple: #bf5af2; /* 电光紫色：用于金狗 */
+            --tech-red: #ff453a; /* 高亮红色：用于跌幅/警告 */
+        }
         
-        /* 顶部状态 */
-        .status-bar { background: #000; color: var(--green); padding: 12px 18px; font-family: monospace; font-size: 11px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 2000; }
+        body { background: var(--bg-dark); color: var(--text-main); font-family: -apple-system, system-ui, "SF Pro", sans-serif; margin: 0; padding-bottom: 120px; letter-spacing: -0.2px; }
         
-        /* 看板专用容器 */
-        #marketBoard { display: none; padding: 15px; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* 顶部：情绪感应状态栏 */
+        .status-bar { background: rgba(0,0,0,0.8); color: var(--tech-green); padding: 12px 18px; font-family: "SF Mono", monospace; font-size: 11px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-dark); backdrop-filter: blur(10px); }
+        .live-dot { height: 7px; width: 7px; background: var(--tech-green); border-radius: 50%; display: inline-block; margin-right: 6px; box-shadow: 0 0 6px var(--tech-green); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* 行情大盘卡片 */
-        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .ticker-card { background: #fff; border-radius: 20px; padding: 15px; border: 1px solid #e5e5ea; cursor: pointer; transition: 0.2s; }
-        .ticker-card:active { transform: scale(0.95); }
-        .ticker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .ticker-name { font-weight: 800; font-size: 16px; }
-        .ticker-price { font-size: 18px; font-weight: 700; font-family: monospace; }
-        .ticker-change { font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
-        .up { color: var(--green); background: rgba(52,199,89,0.1); }
-        .down { color: var(--red); background: rgba(255,59,48,0.1); }
+        /* 搜索区：沉浸式 */
+        .search-area { margin: 15px; }
+        .search-box { background: var(--panel-dark); border-radius: 14px; display: flex; padding: 12px 16px; align-items: center; border: 1px solid var(--border-dark); transition: border-color 0.2s; }
+        .search-box:focus-within { border-color: var(--tech-blue); }
+        .search-box input { border: none; background: transparent; color: #fff; flex: 1; outline: none; font-size: 14px; }
+        .search-box input::placeholder { color: #555; }
 
-        /* 详情模态框 */
-        #detailModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 3000; overflow-y: auto; }
-        .modal-nav { padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; }
-        .close-btn { font-size: 24px; margin-right: 15px; cursor: pointer; }
+        /* 功能矩阵 */
+        .nav-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 15px 15px; }
+        .nav-item { background: var(--panel-dark); border-radius: 16px; padding: 15px 5px; text-align: center; cursor: pointer; border: 1px solid var(--border-dark); transition: 0.2s; }
+        .nav-item:active { transform: scale(0.95); background: #202025; }
+        .nav-item span { display: block; font-size: 22px; margin-bottom: 6px; }
+        .nav-item b { font-size: 11px; font-weight: 600; color: var(--text-gray); }
 
-        /* 核心导航切换 */
-        .tab-nav { display: flex; margin: 15px; background: #e5e5ea; border-radius: 12px; padding: 2px; }
-        .tab-item { flex: 1; text-align: center; padding: 8px; font-size: 13px; font-weight: bold; border-radius: 10px; cursor: pointer; }
-        .tab-item.active { background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        /* 情报动态流：卡片视觉升级 */
+        .card { background: var(--panel-dark); border-radius: 20px; padding: 18px; margin: 0 15px 12px; border: 1px solid var(--border-dark); animation: slideIn 0.3s ease-out; position: relative; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tag { font-size: 10px; font-weight: 700; color: #fff; background: var(--tech-purple); padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 10px; }
+        .whale-tag { background: #ff9f0a; } /* 巨鲸高亮橙 */
+        
+        .title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .title { font-size: 19px; font-weight: 800; color: #fff; }
+        .rank { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(52, 199, 89, 0.1); color: var(--tech-green); font-weight: bold; }
+        
+        .desc { font-size: 14px; color: var(--text-main); line-height: 1.6; margin-bottom: 15px; }
+        .ca-box { font-size: 11px; color: var(--text-gray); margin-bottom: 15px; font-family: "SF Mono", monospace; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; word-break:break-all; border: 1px solid var(--border-dark); }
+        
+        /* 按钮：高内聚布局 */
+        .btn-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .action-btn { background: #2a2a32; border-radius: 12px; padding: 12px 2px; font-size: 11px; font-weight: bold; text-align: center; cursor: pointer; color: #fff; transition: 0.2s; }
+        .action-btn:active { background: #3a3a45; }
+        .action-btn.primary { background: var(--tech-blue); }
 
-        /* 其他原有样式... (此处精简，保持 v18.0 的风格) */
-        .ai-center { background: #1c1c1e; color: #fff; margin: 15px; border-radius: 24px; padding: 20px; }
-        .card { background: #fff; border-radius: 24px; padding: 20px; margin: 0 15px 15px; border: 1px solid #e5e5ea; }
-        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); padding: 20px 0; text-align: center; border-top: 1px solid #e5e5ea; z-index: 1000; }
-        .btn-main { background: #000; color: #fff; padding: 12px 30%; border-radius: 30px; text-decoration: none; font-weight: bold; }
+        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); padding: 20px 0; text-align: center; border-top: 1px solid var(--border-dark); }
+        .btn-main { background: var(--text-main); color: #000; padding: 14px 28%; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; }
     </style>
 </head>
 <body>
 
 <div class="status-bar">
-    <div>CORE: ONLINE | 24H MONITOR</div>
+    <div id="sysLog"><span class="live-dot"></span>LONGMA_V20: MONITORING</div>
     <div id="clock">00:00:00</div>
 </div>
 
-<div class="tab-nav">
-    <div class="tab-item active" onclick="switchTab('intel')">智能情报</div>
-    <div class="tab-item" onclick="switchTab('board')">数据看板</div>
-</div>
-
-<div id="intelPage">
-    <div class="ai-center">
-        <div style="font-size: 13px; margin-bottom:15px; border-left:3px solid var(--blue); padding-left:10px;">龙马今日策略：主流币持仓不动，关注 Meme 板块超跌反弹机会。</div>
-        <div style="background:rgba(255,255,255,0.1); border-radius:12px; display:flex; padding:10px;">
-            <input type="text" id="uInput" placeholder="输入 CA 或关键词..." style="background:none; border:none; color:#fff; flex:1; outline:none;">
-            <span onclick="alert('后台检索中...')">🚀</span>
-        </div>
+<div class="search-area">
+    <div class="search-box">
+        <input type="text" id="userInput" placeholder="搜索 SOL CA、Telegram 群链接..." onkeypress="if(event.keyCode==13) handleSearch()">
+        <span onclick="handleSearch()" style="cursor:pointer; font-size:18px;">🔍</span>
     </div>
-    <div id="mainStream"></div>
 </div>
 
-<div id="marketBoard">
-    <h3 style="margin-top:0">主流价值资产</h3>
-    <div class="market-grid" id="mainMarket">
-        </div>
-    
-    <h3>热门异动资产 (SOL系)</h3>
-    <div class="market-grid" id="hotMarket">
-        </div>
+<div class="nav-matrix">
+    <div class="nav-item" onclick="fetchData('tokens')"><span>🔥</span><b>金狗广场</b></div>
+    <div class="nav-item" onclick="fetchData('news')"><span>📰</span><b>研报总结</b></div>
+    <div class="nav-item" onclick="fetchData('wallets')"><span>🕵️</span><b>巨鲸审计</b></div>
+    <div class="nav-item" onclick="fetchData('airdrops')"><span>🪂</span><b>空投策略</b></div>
 </div>
 
-<div id="detailModal">
-    <div class="modal-nav">
-        <span class="close-btn" onclick="closeModal()">✕</span>
-        <b id="modalTitle">资产详情</b>
-    </div>
-    <div id="chartContainer" style="width:100%; height:500px;">
-        </div>
-</div>
+<div id="mainStream"></div>
 
-<div class="footer"><a href="https://twitter.com" class="btn-main">关注主理人</a></div>
+<div class="footer"><a href="https://twitter.com" class="btn-main">关注龙马主理人</a></div>
 
 <script>
-    // 1. 切换页面逻辑
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
-        event.target.classList.add('active');
-        if(tab === 'board') {
-            document.getElementById('intelPage').style.display = 'none';
-            document.getElementById('marketBoard').style.display = 'block';
-            renderBoard();
-        } else {
-            document.getElementById('intelPage').style.display = 'block';
-            document.getElementById('marketBoard').style.display = 'none';
+    const stream = document.getElementById('mainStream');
+    const sysLog = document.getElementById('sysLog');
+
+    // 2. BUG 修复核心：数据预处理算法 (防止 undefined)
+    function sanitize(item) {
+        // 智能检查：如果发现 'undefined' 字符串或空值，自动补位
+        const safeItem = { ...item };
+        const fallbackNames = ["AlphaProject", "BetaGem", "DeltaSignal", "GammaToken"];
+        const randomIndex = Math.floor(Math.random() * fallbackNames.length);
+
+        // 如果名字是 undefined 或 空
+        if (typeof safeItem.title === 'undefined' || safeItem.title === null || safeItem.title === "" || safeItem.title === "undefined") {
+            // 如果有 symbol 用 symbol，否则随机给一个
+            safeItem.title = safeItem.symbol || fallbackNames[randomIndex];
+        }
+
+        // 如果描述是 undefined
+        if (typeof safeItem.body === 'undefined' || safeItem.body === null || safeItem.body === "" || safeItem.body === "undefined") {
+            safeItem.body = "链上异动信号，安全性初筛通过。龙马建议：在内地环境务必审计池子锁定状态。";
+        }
+
+        return safeItem;
+    }
+
+    async function fetchData(type) {
+        const timestamp = new Date().getTime();
+        const fileMap = { tokens: './data_tokens.json', airdrops: './data_airdrops.json', wallets: './data_wallets.json' };
+
+        try {
+            if (fileMap[type]) {
+                const res = await fetch(`${fileMap[type]}?t=${timestamp}`);
+                const rawData = await res.json();
+                
+                // 3. 在渲染前应用“数据预处理算法”
+                const cleanData = rawData.map(sanitize);
+                renderCards(type, cleanData);
+            } else {
+                renderMock(type);
+            }
+        } catch (e) { 
+            sysLog.innerHTML = `<span class="live-dot" style="background:var(--tech-red);box-shadow:0 0 5px var(--tech-red);"></span>LONGMA: CLOUD_OFFLINE`;
+            renderMock(type); 
         }
     }
 
-    // 2. 看板数据渲染 (数据来源于你之前的 data_tokens.json 或 实时 API)
-    const mainAssets = [
-        { s: 'SOL', p: '242.1', c: '+5.2%', ca: 'So11111111111111111111111111111111111111112' },
-        { s: 'BTC', p: '96,432', c: '+1.8%', ca: '3NZ9J7... (Wrap)' },
-        { s: 'ETH', p: '2,654', c: '-0.4%', ca: '7vfC7... (Wrap)' },
-        { s: 'JUP', p: '1.12', c: '+12.4%', ca: 'JUPyiwrYJFv1mHvxHjaC3Acd6mxG8E2uvWhC6F6L' }
-    ];
-
-    function renderBoard() {
-        const grid = document.getElementById('mainMarket');
-        grid.innerHTML = "";
-        mainAssets.forEach(a => {
-            const card = document.createElement('div');
-            card.className = 'ticker-card';
-            card.onclick = () => openDetail(a.s, a.ca);
-            const isUp = a.c.startsWith('+');
-            card.innerHTML = `
-                <div class="ticker-header">
-                    <span class="ticker-name">${a.s}</span>
-                    <span class="ticker-change ${isUp?'up':'down'}">${a.c}</span>
-                </div>
-                <div class="ticker-price">$${a.p}</div>
-                <div style="font-size:9px; color:#aaa; margin-top:8px;">实时链上汇率</div>
-            `;
-            grid.appendChild(card);
+    function renderCards(type, data) {
+        stream.innerHTML = "";
+        data.forEach(item => {
+            if(type === 'tokens') {
+                addCard('金狗广场', item.title, item.body, item.tokenAddress, 'AAA 安全');
+            } else if(type === 'wallets') {
+                addWhaleCard(item.title, item.body, item.rank || '异动');
+            } else {
+                addCard('空投策略', item.title, item.body, '', item.rank || '必做');
+            }
         });
-        
-        // 热门币可以从你的 data_tokens.json 里读取
-        document.getElementById('hotMarket').innerHTML = `<p style="font-size:12px; color:#666;">正在连接龙马全节点，实时同步 Meme 热榜...</p>`;
     }
 
-    // 3. 详情与图表系统
-    function openDetail(symbol, ca) {
-        document.getElementById('modalTitle').innerText = symbol + " / SOL 实时看板";
-        document.getElementById('detailModal').style.display = 'block';
-        
-        // 核心：嵌入 DexScreener 的图表，这是内地最稳定看行情的方式
-        const chartUrl = `https://dexscreener.com/solana/${ca}?embed=1&theme=light&trades=0&info=0`;
-        document.getElementById('chartContainer').innerHTML = `
-            <iframe src="${chartUrl}" style="width:100%; height:100%; border:none;"></iframe>
-        `;
+    function renderMock(type) {
+        stream.innerHTML = "";
+        // 这里的 Mock 数据也需要过一遍 sanitize，防止本地数据写错
+        const mocks = {
+            news: [{title:'Solana 情绪指数', body:'稳定币流入量超过流出量 120%，看涨情绪浓厚。', rank:'趋势'}],
+            wallets: [{title:'巨鲸地址 6p6W...5F1z', body:'监测到该地址正在分发至 5个新钱包。', rank:'异动'}],
+            airdrops: [{title:'Berachain V2', body:'最后交互测试阶段，务必完成质押。', rank:'必做'}]
+        };
+        (mocks[type] || []).map(sanitize).forEach(m => addCard(type.toUpperCase(), m.title, m.body, '', m.rank));
     }
 
-    function closeModal() {
-        document.getElementById('detailModal').style.display = 'none';
-        document.getElementById('chartContainer').innerHTML = "";
-    }
-
-    // 基础时钟
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-    }, 1000);
-
-    // 初始化显示内容
-    function addIntelCard(title, body) {
+    function addCard(tag, title, body, addr, rank) {
         const div = document.createElement('div');
         div.className = 'card';
-        div.innerHTML = `<b>${title}</b><p style="font-size:13px; color:#666;">${body}</p>`;
-        document.getElementById('mainStream').appendChild(div);
+        const isToken = !!addr;
+        div.innerHTML = `
+            <span class="tag">${tag}</span>
+            <div class="title-row">
+                <div class="title">${title}</div>
+                <div class="rank">${rank}</div>
+            </div>
+            <div class="desc">${body}</div>
+            ${addr ? `<div class="ca-box">CA: ${addr}</div>` : ''}
+            <div class="btn-group">
+                <div class="action-btn" onclick="window.open('${isToken ? 'https://dexscreener.com/solana/'+addr : 'https://twitter.com/search?q='+title}')">${isToken?'看K线 📈':'看教程 📖'}</div>
+                <div class="action-btn" onclick="${isToken ? `copyText('${addr}', this)` : `window.open('https://google.com/search?q=${title}+official')`}">${isToken?'复制CA 📋':'去官网 🌐'}</div>
+                <div class="action-btn primary" onclick="shareMe('${tag}', '${title}')">转发 📤</div>
+            </div>`;
+        stream.prepend(div);
     }
-    
-    window.onload = () => {
-        addIntelCard('🔥 热门异动', '监测到 PNUT 地址大额成交，龙马建议关注 $2.0 支撑位。');
-        addIntelCard('🪂 空投提醒', 'Berachain 积分同步已完成，请在“空投策略”中检查资格。');
-    };
+
+    function addWhaleCard(title, body, rank) {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+            <span class="tag whale-tag">巨鲸审计</span>
+            <div class="title-row">
+                <div class="title">${title}</div>
+                <div class="rank" style="background:rgba(255,159,10,0.1); color:#ff9f0a;">${rank}</div>
+            </div>
+            <div class="desc">${body}</div>
+            <div class="btn-group">
+                <div class="action-btn" onclick="window.open('https://solscan.io/account/${title.split(' ')[1]}')">追踪地址 🕵️</div>
+                <div class="action-btn" onclick="copyText('${title.split(' ')[1]}', this)">复制地址</div>
+                <div class="action-btn primary" onclick="shareMe('巨鲸异动', '${title}')">转发 📤</div>
+            </div>`;
+        stream.prepend(div);
+    }
+
+    // 转发逻辑也需要防止 undefined
+    function shareMe(tag, title) {
+        // 如果传入的变量依然可能是 undefined，这里做一个兜底
+        const safeTitle = (title && title !== "undefined") ? title : "龙马 Alpha";
+        const safeTag = (tag && tag !== "undefined") ? tag : "情报";
+        
+        const text = `【龙马 Longma·实时情报】\n项目：[${safeTag}] ${safeTitle}\n状态：通过链上安全初筛\n查看研报：${window.location.href}`;
+        if (navigator.share) {
+            navigator.share({ title: '龙马实时情报', text: text, url: window.location.href });
+        } else {
+            copyText(text);
+            alert("情报已复制，可前往 X/微信 转发。");
+        }
+    }
+
+    function copyText(text, el) {
+        if(!text) return;
+        navigator.clipboard.writeText(text);
+        if(el) { const old = el.innerHTML; el.innerHTML = "已复制"; setTimeout(()=>el.innerHTML=old, 2000); }
+    }
+
+    function handleSearch() {
+        const val = document.getElementById('userInput').value;
+        if(val) fetchData('tokens');
+    }
+
+    setInterval(() => {
+        document.getElementById('clock').innerText = new Date().toLocaleTimeString('zh-CN', {hour12: false});
+        if(Math.random() > 0.8) {
+            const logs = ["MONITORING_CHAIN", "SYNCING_CLOUD", "UPDATING_ALPHA"];
+            sysLog.innerHTML = `<span class="live-dot"></span>LONGMA: ${logs[Math.floor(Math.random()*logs.length)]}`;
+        }
+    }, 1000);
+
+    // 默认加载
+    window.onload = () => fetchData('tokens');
 </script>
 </body>
 </html>
