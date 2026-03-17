@@ -5,47 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>龙马 Longma - 自动化智慧终端</title>
     <style>
-        :root { --blue: #007aff; --green: #30d158; --bg: #ffffff; --card: #f2f2f7; --text: #1c1c1e; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; }
+        :root { --blue: #007aff; --green: #30d158; --bg: #ffffff; --card: #f2f2f7; --text: #1c1c1e; --gray: #8e8e93; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; -webkit-tap-highlight-color: transparent; }
         
-        /* 1. 顶部：全自动扫描日志 */
+        /* 1. 顶部：实装扫描日志 */
         .system-monitor { background: #000; color: var(--green); padding: 10px 15px; font-family: monospace; font-size: 11px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--blue); }
         
-        /* 2. 智慧体核心大脑 (交互入口) */
+        /* 2. 智慧体核心 */
         .ai-brain { background: #1c1c1e; color: #fff; margin: 15px; border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        .brain-display { font-size: 15px; line-height: 1.6; min-height: 80px; margin-bottom: 15px; color: #f0f0f0; border-left: 3px solid var(--blue); padding-left: 15px; }
+        .brain-display { font-size: 15px; line-height: 1.6; min-height: 60px; margin-bottom: 15px; color: #f0f0f0; border-left: 3px solid var(--blue); padding-left: 15px; }
         .input-group { background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; padding: 12px; }
-        .input-group input { border: none; background: transparent; color: #fff; flex: 1; outline: none; }
+        .input-group input { border: none; background: transparent; color: #fff; flex: 1; outline: none; font-size: 14px; }
 
-        /* 3. 10个功能按键的显性体现 (复刻你的原始需求) */
+        /* 3. 导航按键 (显性入口) */
         .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 15px 15px; }
-        .nav-btn { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; }
+        .nav-btn { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .nav-btn:active { background: #f2f2f7; transform: scale(0.95); }
         .nav-btn span { display: block; font-size: 18px; margin-bottom: 4px; }
         .nav-btn b { font-size: 10px; color: #111; display: block; }
 
-        /* 4. 自动化收集的内容流 (3天跨度) */
+        /* 4. 自动化内容流 */
         .stream { padding: 0 15px; }
-        .data-card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; }
+        .data-card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; position: relative; }
         .card-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--gray); margin-bottom: 10px; }
         
-        /* 操作类按键 (卡片内) */
+        /* 5. 功能按键实装 (操作类) */
         .op-row { display: flex; gap: 8px; margin-top: 15px; }
-        .op-btn { flex: 1; border: 1px solid #eee; padding: 8px; border-radius: 8px; font-size: 11px; text-align: center; background: var(--card); }
+        .op-btn { flex: 1; border: 1px solid #eee; padding: 8px; border-radius: 8px; font-size: 11px; text-align: center; background: var(--card); color: #333; cursor: pointer; transition: 0.2s; }
+        .op-btn:active { background: #e5e5ea; }
 
-        /* 营销与转化 (2个按钮) */
+        /* 6. 底部转化 */
         .footer { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 15px 0; text-align: center; z-index: 100; }
-        .btn-vip { background: #000; color: #fff; padding: 12px 25%; border-radius: 30px; text-decoration: none; font-weight: bold; }
+        .btn-main { background: #000; color: #fff; padding: 12px 25%; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px; display: inline-block; }
     </style>
 </head>
 <body>
 
 <div class="system-monitor">
-    <div id="log">SCANNING: 聪明钱地址库...</div>
-    <div id="clock">2026-03-17 12:00:00</div>
+    <div id="log">SCANNING: MEMPOOL...</div>
+    <div id="clock">2026-03-17 12:14:17</div>
 </div>
 
 <div class="ai-brain">
-    <div class="brain-display" id="aiOutput">你好，我是龙马。我正在自动采集全网资讯、追踪聪明钱包并优化空投策略。</div>
+    <div class="brain-display" id="aiOutput">你好。龙马已同步 ChainInsight 数据流。请下达指令或从控制面板选择功能。</div>
     <div class="input-group">
         <input type="text" id="userInput" placeholder="输入关键词，让我自动优化逻辑..." onkeypress="if(event.keyCode==13) autoOptimize()">
         <span onclick="autoOptimize()" style="cursor:pointer">🚀</span>
@@ -53,127 +55,96 @@
 </div>
 
 <div class="nav-grid">
-    <div class="nav-btn" onclick="autoAction('广场')"><span>🔥</span><b>金狗广场</b></div>
-    <div class="nav-btn" onclick="autoAction('总结')"><span>💬</span><b>资讯总结</b></div>
-    <div class="nav-btn" onclick="autoAction('监控')"><span>🎯</span><b>钱包监控</b></div>
-    <div class="nav-btn" onclick="autoAction('共振')"><span>📡</span><b>共振信号</b></div>
+    <div class="nav-btn" onclick="trigger('广场')"><span>🔥</span><b>金狗广场</b></div>
+    <div class="nav-btn" onclick="trigger('总结')"><span>💬</span><b>资讯总结</b></div>
+    <div class="nav-btn" onclick="trigger('监控')"><span>🎯</span><b>钱包监控</b></div>
+    <div class="nav-btn" onclick="trigger('共振')"><span>📡</span><b>共振信号</b></div>
 </div>
 
-<div style="margin:0 15px 15px; background:#fff9db; padding:10px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
-    <span>💎 订阅 VIP，解锁全自动空投脚本策略</span>
-    <button style="background:#000; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:10px;" onclick="location.href='https://twitter.com'">解锁权限</button>
+<div style="margin:0 15px 15px; background:#fff9db; padding:12px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ffe066;">
+    <span>💎 <b>VIP 权限</b>：解锁全自动空投脚本策略</span>
+    <button style="background:#000; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:10px; font-weight:bold;" onclick="window.open('https://twitter.com')">解锁</button>
 </div>
 
-<div class="stream" id="mainStream">
-    </div>
+<div class="stream" id="mainStream"></div>
 
 <div class="footer">
-    <a href="https://twitter.com" class="btn-vip">关注龙马主理人</a>
+    <a href="https://twitter.com/你的账号" class="btn-main">关注龙马主理人</a>
 </div>
 
 <script>
     const output = document.getElementById('aiOutput');
     const stream = document.getElementById('mainStream');
+    const MOCK_ADDR = "6p6W5qSbeUTuXvYS93v2YQu6T63H5F1zT2y2y2y2y2y"; // 示例合约地址
 
-    // 1. 自动优化逻辑
+    // 实装 1：自动化优化逻辑
     function autoOptimize() {
         const val = document.getElementById('userInput').value;
-        output.innerHTML = `> 正在根据关键词 "${val}" 自动优化采集策略...<br>> 已重新分配 40% 的计算节点追踪该领域资讯与地址。`;
+        if(!val) return;
+        output.innerHTML = `> 正在针对 "${val}" 进行多维采样...<br>> 已成功优化 24h 自动化收集权重。`;
         setTimeout(() => {
-            addCard('自动优化', val.toUpperCase(), '已将该领域加入 24h 自动化监控，并同步了最近 3 天的相关数据。');
+            addCard('自动发现', val.toUpperCase(), `系统已自动拦截关于 ${val} 的 12 条深度讯息，剔除 95% 垃圾噪音。`, MOCK_ADDR);
             document.getElementById('userInput').value = "";
-        }, 1200);
+        }, 1000);
     }
 
-    // 2. 实装导航功能
-    function autoAction(type) {
-        output.innerHTML = `> 正在实时抓取最新的【${type}】数据...<br>> 已过滤 90% 的垃圾信息。`;
+    // 实装 2：导航功能逻辑
+    function trigger(type) {
+        output.innerHTML = `> 正在实时抓取最新的【${type}】数据...<br>> 共振权重计算中...`;
         setTimeout(() => {
-            if(type==='广场') addCard('金狗广场', '$LONGMA', '龙马自动化系统在链上发现一个潜伏期金狗，聪明钱占比 45%。');
-            if(type==='监控') addCard('钱包监控', '0x71...af2', '该地址今日自动买入 3 笔新资产，胜率评估：极高。');
-            if(type==='共振') addCard('共振信号', 'AI + Meme', '推特讨论热度与链上净流入达成共振，建议关注。');
-            if(type==='总结') addCard('资讯总结', '今日全网脱水', '自动收集了 50 个频道的精华：重点关注 Berachain 空投截止日期。');
+            if(type==='广场') addCard('金狗广场', '$LONGMA', '龙马系统捕捉到 45% 聪明钱归集信号。', MOCK_ADDR);
+            if(type==='总结') addCard('资讯总结', '今日全网脱水', '自动总结 50 个频道精华：重点关注 AI 赛道合并。', '');
+            if(type==='监控') addCard('钱包监控', 'Smart Money', '3 个高胜率地址正在同步执行买入指令。', MOCK_ADDR);
+            if(type==='共振') addCard('共振信号', 'Alpha 共振', '推特情绪与链上流入达成 92% 匹配度。', MOCK_ADDR);
         }, 800);
     }
 
-    function addCard(tag, title, body) {
-        const card = `
-            <div class="data-card">
-                <div class="card-meta"><span style="color:var(--blue)">[${tag}]</span><span>2026-03-17</span></div>
-                <div style="font-weight:bold; font-size:16px; margin-bottom:10px;">${title}</div>
-                <div style="font-size:13px; color:#666; line-height:1.5;">${body}</div>
-                <div class="op-row">
-                    <div class="op-btn" onclick="alert('看K线')">看K线 📈</div>
-                    <div class="op-btn" onclick="alert('复制')">复制地址 📋</div>
-                    <div class="op-btn" onclick="alert('研报')">深度研报 🔭</div>
-                    <div class="op-btn" onclick="alert('分享')">分享 📤</div>
-                </div>
+    // 实装 3：按键功能核心
+    function addCard(tag, title, body, addr) {
+        const card = document.createElement('div');
+        card.className = 'data-card';
+        card.innerHTML = `
+            <div class="card-meta"><span style="color:var(--blue)">[${tag}]</span><span>2026-03-17</span></div>
+            <div style="font-weight:bold; font-size:17px; margin-bottom:10px;">${title}</div>
+            <div style="font-size:13px; color:#666; line-height:1.5;">${body}</div>
+            <div class="op-row">
+                <div class="op-btn" onclick="window.open('https://dexscreener.com/solana/${addr}')">看K线 📈</div>
+                <div class="op-btn" onclick="copyText('${addr}', this)">复制地址 📋</div>
+                <div class="op-btn" onclick="window.open('https://twitter.com/search?q=${title}')">深度研报 🔭</div>
+                <div class="op-btn" onclick="shareIt('${title}')">分享 📤</div>
             </div>`;
-        stream.innerHTML = card + stream.innerHTML;
+        stream.prepend(card);
     }
 
-    // 自动模拟日志滚动
+    // 实装 4：复制到剪贴板
+    function copyText(text, el) {
+        if(!text) return alert('该内容暂无合约地址');
+        navigator.clipboard.writeText(text).then(() => {
+            const old = el.innerHTML;
+            el.innerHTML = "已复制 ✅";
+            el.style.color = "var(--green)";
+            setTimeout(() => { el.innerHTML = old; el.style.color = ""; }, 2000);
+        });
+    }
+
+    // 实装 5：原生分享
+    function shareIt(title) {
+        if (navigator.share) {
+            navigator.share({ title: '龙马情报: ' + title, url: window.location.href });
+        } else {
+            alert('请手动复制链接分享');
+        }
+    }
+
+    // 自动模拟日志
     setInterval(() => {
-        const logs = ["SCANNING: TX_MEMPOOL...", "COLLECTING: TWITTER_DATA...", "OPTIMIZING: AIRDROP_PATH..."];
+        const logs = ["SCANNING: SOL_ALPHA...", "ANALYZING: SOCIAL_SENTIMENT...", "OPTIMIZING: DATA_PIPELINE..."];
         document.getElementById('log').innerText = logs[Math.floor(Math.random()*logs.length)];
         document.getElementById('clock').innerText = new Date().toLocaleString();
     }, 2000);
 
-    // 初始化内容
-    addCard('空投策略', 'Berachain 自动化脚本', '系统已自动收集并优化了最新的空投路径，点击“深度研报”查看。');
+    // 默认加载一条
+    addCard('空投策略', 'Berachain 自动化方案', '系统已自动完成路径优化，建议在本周内完成交互。', '');
 </script>
 </body>
 </html>
-<script>
-    // 定义一个真实的合约地址（这里用 $LONGMA 模拟，你可以换成变量）
-    const MOCK_ADDR = "6p6W5qSbeUTuXvYS93v2YQu6T63H5F1zT2y2y2y2y2y"; // 模拟地址
-
-    function addCard(tag, title, body) {
-        // 为了演示，我们给每个卡片分配一个模拟地址
-        const tokenAddr = MOCK_ADDR; 
-        
-        const card = `
-            <div class="data-card">
-                <div class="card-meta"><span style="color:var(--blue)">[${tag}]</span><span>2026-03-17</span></div>
-                <div style="font-weight:bold; font-size:18px; margin-bottom:10px;">${title}</div>
-                <div style="font-size:13px; color:#666; line-height:1.5;">${body}</div>
-                
-                <div class="op-row">
-                    <div class="op-btn" onclick="window.open('https://dexscreener.com/solana/${tokenAddr}')">看K线 📈</div>
-                    
-                    <div class="op-btn" onclick="copyToClipboard('${tokenAddr}', this)">复制地址 📋</div>
-                    
-                    <div class="op-btn" onclick="window.open('https://twitter.com/search?q=${title}')">深度研报 🔭</div>
-                    
-                    <div class="op-btn" onclick="shareContent('${title}', '${body}')">分享 📤</div>
-                </div>
-            </div>`;
-        document.getElementById('mainStream').innerHTML = card + document.getElementById('mainStream').innerHTML;
-    }
-
-    // 实装复制功能
-    function copyToClipboard(text, btn) {
-        navigator.clipboard.writeText(text).then(() => {
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "已复制 ✅";
-            btn.style.color = "var(--green)";
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.color = "";
-            }, 2000);
-        });
-    }
-
-    // 实装分享功能
-    function shareContent(title, text) {
-        if (navigator.share) {
-            navigator.share({
-                title: '龙马 AI 情报: ' + title,
-                text: text,
-                url: window.location.href,
-            });
-        } else {
-            alert('当前浏览器不支持原生分享，请手动复制链接');
-        }
-    }
-</script>
