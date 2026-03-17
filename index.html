@@ -3,134 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>龙马 Alpha - 综合情报终端</title>
+    <title>龙马 Longma Alpha - 智能投研</title>
     <style>
-        :root { --primary: #007aff; --text: #111; --gray: #848e9c; --bg: #ffffff; --card: #f8f9fa; --border: #eee; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+        :root { --blue: #007aff; --bg: #ffffff; --card: #f9f9f9; --text: #111; --gray: #848e9c; --border: #eee; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 100px; }
         
-        /* 头部与实时行情 */
+        /* 1. 顶部与搜索框 */
         .header { background: #fff; padding: 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
-        .logo-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .logo { font-size: 18px; font-weight: bold; color: var(--text); }
-        .live-tag { color: #00c076; font-size: 12px; font-weight: bold; animation: blink 2s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        
-        .price-ticker { display: flex; gap: 15px; font-size: 13px; color: var(--gray); overflow-x: auto; padding-bottom: 5px; }
-        .price-ticker span { color: var(--text); font-weight: 500; }
+        .ai-search-bar { background: #f2f2f7; border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .ai-search-bar input { border: none; background: transparent; flex: 1; outline: none; font-size: 14px; }
+        .voice-icon { font-size: 18px; cursor: pointer; color: var(--blue); }
 
-        /* 功能切换 */
-        .tab-menu { display: flex; gap: 20px; font-size: 14px; color: var(--gray); border-bottom: 1px solid var(--border); padding: 10px 15px; background: #fff; }
-        .tab-item { cursor: pointer; padding-bottom: 8px; position: relative; }
-        .tab-item.active { color: var(--primary); font-weight: bold; }
-        .tab-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--primary); }
+        /* 2. 导航类 (4个按钮) */
+        .nav { display: flex; gap: 20px; overflow-x: auto; padding: 15px; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+        .nav-item { cursor: pointer; white-space: nowrap; font-size: 14px; color: var(--gray); position: relative; padding-bottom: 8px; }
+        .nav-item.active { color: var(--blue); font-weight: bold; }
+        .nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--blue); }
 
-        /* 内容容器 */
-        .container { padding: 15px 15px 100px 15px; }
-        .date-divider { background: #f1f3f5; color: var(--gray); display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12px; margin: 25px 0 15px 0; font-weight: bold; }
-        
-        /* 情报卡片系统 */
-        .info-card { border-left: 2px solid var(--border); padding-left: 15px; margin-bottom: 30px; position: relative; }
-        .info-card::before { content: ''; position: absolute; left: -5px; top: 5px; width: 8px; height: 8px; background: var(--primary); border-radius: 50%; }
-        .card-time { font-size: 14px; color: var(--gray); margin-bottom: 5px; font-weight: bold; }
-        .card-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .card-body { background: var(--card); padding: 15px; border-radius: 12px; line-height: 1.6; font-size: 14px; color: #333; border: 1px solid var(--border); }
-        
-        /* 标签与按钮 */
-        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-        .tag { background: #fff; border: 1px solid #ddd; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 4px; }
-        .tag-blue { color: var(--primary); border-color: var(--primary); }
+        /* 3. 营销与权限 (2个按钮) */
+        .banner { background: #fff9db; border: 1px solid #ffe066; margin: 15px; padding: 12px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+        .btn-vip { background: #111; color: #fff; border: none; padding: 6px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* 底部操作 */
-        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); padding: 15px 0; border-top: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .main-btn { display: block; background: var(--primary); color: #fff; width: 85%; margin: 0 auto; text-align: center; padding: 14px; border-radius: 30px; font-weight: bold; text-decoration: none; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+        /* 内容列表 */
+        .content { padding: 0 15px; }
+        .date-label { font-size: 12px; color: var(--gray); background: #eee; display: inline-block; padding: 2px 8px; border-radius: 4px; margin: 20px 0 10px 0; }
+        .info-card { border-left: 2px solid var(--blue); padding-left: 15px; margin-bottom: 25px; }
+        .card-time { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+        .card-title { color: var(--blue); font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+        .card-box { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+
+        /* 4. 情报操作类 (4个按钮) */
+        .op-group { display: flex; gap: 8px; margin-top: 12px; }
+        .op-btn { background: #fff; border: 1px solid #ddd; padding: 6px 12px; border-radius: 6px; font-size: 12px; color: #555; text-decoration: none; cursor: pointer; }
+
+        /* 底部转化按钮 */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid var(--border); padding: 15px 0; text-align: center; }
+        .btn-main { background: var(--blue); color: #fff; padding: 12px 20%; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block; box-shadow: 0 4px 15px rgba(0,122,255,0.2); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="logo-area">
-        <div class="logo">龙马 Longma Alpha 1.0</div>
-        <div class="live-tag">● 实时数据监控中</div>
+    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <span>龙马 Longma Alpha 🤖</span>
+        <span id="sol-price" style="color:var(--blue)">SOL $...</span>
     </div>
-    <div class="price-ticker">
-        <div>BTC <span id="p-btc">加载中...</span></div>
-        <div>SOL <span id="p-sol">加载中...</span></div>
-        <div>BNB <span id="p-bnb">加载中...</span></div>
-    </div>
-</div>
-
-<div class="tab-menu">
-    <div class="tab-item active">全网资讯</div>
-    <div class="tab-item">钱包动态</div>
-    <div class="tab-item">共振信号</div>
-</div>
-
-<div class="container">
-    <div class="date-divider">3月17日 今天</div>
-    
-    <div class="info-card">
-        <div class="card-time">11:04</div>
-        <div class="card-title">AI 深度总结：$DSNT 异动分析</div>
-        <div class="card-body">
-            社群热度飙升。龙马监控到 3 个 Smart Money 地址在 0.041 附近密集建仓。情绪表现为【强烈看多】，筹码结构稳定。
-        </div>
-        <div class="tag-row">
-            <a class="tag" href="#">DSNT 📋</a>
-            <a class="tag tag-blue" href="https://dexscreener.com">看K线 📈</a>
-        </div>
-    </div>
-
-    <div class="date-divider">3月16日 昨天</div>
-    
-    <div class="info-card">
-        <div class="card-time">22:15</div>
-        <div class="card-title">钱包监控：KOL Kagami 减仓</div>
-        <div class="card-body">
-            KOL Kagami 刚刚将 8.83M $金铲子 兑换为 WBNB。目前该钱包持仓下降 35%，风险提示：【部分卖出】。
-        </div>
-        <div class="tag-row">
-            <a class="tag" href="#">钱包追踪 🔍</a>
-        </div>
-    </div>
-
-    <div class="date-divider">3月15日 前天</div>
-    
-    <div class="info-card">
-        <div class="card-time">14:20</div>
-        <div class="card-title">共振信号：$SOL 触发三周期共振</div>
-        <div class="card-body">
-            技术面、资金面、推特情绪面同时回暖。龙马共振强度指数达到 92%，为近一周最高值。
-        </div>
-        <div class="tag-row">
-            <a class="tag" href="#">详细报告 🔭</a>
-        </div>
+    <div class="ai-search-bar">
+        <span style="font-size: 16px;">🔍</span>
+        <input type="text" id="aiInput" placeholder="输入币种或语音提问..." onkeypress="handleSearch(event)">
+        <span class="voice-icon" onclick="startVoice()">🎙️</span>
     </div>
 </div>
+
+<div class="nav">
+    <div class="nav-item active" onclick="render('all')">社群广场</div>
+    <div class="nav-item" onclick="render('info')">社群信息</div>
+    <div class="nav-item" onclick="render('wallet')">钱包监控</div>
+    <div class="nav-item" onclick="render('signal')">共振信号</div>
+</div>
+
+<div class="banner">
+    <span>⚠️ 订阅后解锁最近15分钟深度研报</span>
+    <button class="btn-vip" onclick="alert('正在接入推特验证...')">订阅 VIP</button>
+</div>
+
+<div class="content" id="feed">
+    </div>
 
 <div class="footer">
-    <a href="https://twitter.com/这里填你的推特" class="main-btn">关注主理人 解锁实时 Alpha</a>
+    <a href="https://twitter.com/你的账号" class="btn-main">关注主理人 领取免费研报</a>
 </div>
 
 <script>
-    // 模拟价格更新
-    async function updatePrices() {
+    // 3天资讯数据集合
+    const alphaData = [
+        { date: '3月17日', time: '11:04', type: 'info', title: 'AI 总结: $DSNT 深度解析', body: '龙马抓取到项目方测试转账。筹码分布集中，主力合围迹象明显。建议关注 0.045 支撑。', addr: '0xDSNT...123' },
+        { date: '3月17日', time: '09:15', type: 'wallet', title: 'KOL 异动: Kagami 加仓', body: '地址 0x71...af2 刚刚买入 4.75M $金铲子。历史胜率 88%。', addr: '0xKagami...abc' },
+        { date: '3月16日', time: '22:15', type: 'info', title: '社群热议: $Derp 真实性', body: '用户讨论 CA 地址。情绪表现谨慎。龙马建议避开流动性枯竭区。', addr: '0xDerp...456' },
+        { date: '3月16日', time: '14:30', type: 'signal', title: '共振触发: $SOL 信号', body: '三周期共振强度达 92%。资金面表现极度活跃。', addr: '' },
+        { date: '3月15日', time: '20:00', type: 'wallet', title: 'Smart Money 逃顶提示', body: '监测到 5 个高胜率钱包同时卖出 $ELT，平均获利 400%。', addr: '0xELT...789' },
+        { date: '3月15日', time: '11:00', type: 'info', title: 'AI 预警: 发现 Rug 风险项目', body: '某项目合约权限未放弃，池子锁定时间过短。', addr: '' }
+    ];
+
+    function render(filter = 'all') {
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';
+        let lastDate = '';
+
+        alphaData.filter(i => filter === 'all' || i.type === filter).forEach(i => {
+            if(i.date !== lastDate) {
+                feed.innerHTML += `<div class="date-label">${i.date}</div>`;
+                lastDate = i.date;
+            }
+            feed.innerHTML += `
+                <div class="info-card">
+                    <div class="card-time">${i.time}</div>
+                    <div class="card-title">${i.title}</div>
+                    <div class="card-box">${i.body}</div>
+                    <div class="op-group">
+                        <a class="op-btn" href="https://dexscreener.com" target="_blank">看K线 📈</a>
+                        ${i.addr ? `<div class="op-btn" onclick="copy('${i.addr}')">复制地址 📋</div>` : ''}
+                        <div class="op-btn" onclick="alert('报告生成中...')">深度分析 🔭</div>
+                    </div>
+                </div>`;
+        });
+        
+        // 更新导航高亮
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.toggle('active', el.innerText.includes(filter === 'all' ? '广场' : (filter === 'info' ? '信息' : (filter === 'wallet' ? '监控' : '信号'))));
+        });
+    }
+
+    // AI 搜索逻辑
+    function handleSearch(e) {
+        if (e.key === 'Enter') {
+            const val = document.getElementById('aiInput').value;
+            alert('龙马 AI 正在分析：' + val + '\n\n结果：暂无该币种内幕信息，已加入监控池。');
+        }
+    }
+
+    // 语音仿真
+    function startVoice() {
+        const input = document.getElementById('aiInput');
+        input.placeholder = "正在聆听中...";
+        setTimeout(() => {
+            input.placeholder = "语音识别超时，请打字输入";
+        }, 2000);
+    }
+
+    function copy(txt) {
+        navigator.clipboard.writeText(txt);
+        alert('合约地址已复制到剪贴板');
+    }
+
+    async function getPrice() {
         try {
-            const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=["BTCUSDT","SOLUSDT","BNBUSDT"]');
-            const d = await res.json();
-            document.getElementById('p-btc').innerText = '$' + parseInt(d[0].price);
-            document.getElementById('p-sol').innerText = '$' + parseFloat(d[1].price).toFixed(2);
-            document.getElementById('p-bnb').innerText = '$' + parseFloat(d[2].price).toFixed(1);
-        } catch(e) { console.log('价格获取失败'); }
+            const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT');
+            const d = await r.json();
+            document.getElementById('sol-price').innerText = 'SOL $' + parseFloat(d.price).toFixed(2);
+        } catch(e) {}
     }
-    setInterval(updatePrices, 5000);
-    updatePrices();
 
-    // 复制合约功能
-    function copyText(text) {
-        navigator.clipboard.writeText(text);
-        alert('地址已复制');
-    }
+    setInterval(getPrice, 5000);
+    getPrice();
+    render();
 </script>
-
 </body>
 </html>
