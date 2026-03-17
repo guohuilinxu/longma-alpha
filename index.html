@@ -5,148 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>龙马 Longma - 智慧体终端</title>
     <style>
-        :root { --blue: #007aff; --green: #34c759; --red: #ff3b30; --bg: #ffffff; --card: #f8f9fa; --text: #111; --gray: #8e8e93; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; -webkit-font-smoothing: antialiased; }
-        
-        /* 1. 复刻：数字化顶层看板 */
-        .dashboard { background: #fff; padding: 15px; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
-        .stat-row { display: flex; justify-content: space-between; gap: 10px; }
-        .stat-card { background: var(--card); flex: 1; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #f0f0f0; }
-        .stat-val { display: block; font-size: 16px; font-weight: 800; color: var(--blue); }
-        .stat-label { font-size: 10px; color: var(--gray); text-transform: uppercase; }
+        :root { --blue: #007aff; --green: #34c759; --bg: #ffffff; --card: #f2f2f7; --text: #111; --gray: #8e8e93; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; }
 
-        /* 2. 智慧体核心 (复刻 ChainInsight 的 AI 总结感) */
-        .ai-terminal { background: #000; color: #fff; margin: 15px; border-radius: 18px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; }
-        .ai-terminal::before { content: "LONGMA BRAIN v4.0"; position: absolute; top: 8px; right: 15px; font-size: 8px; color: #444; font-family: monospace; }
-        .ai-response { font-size: 14px; line-height: 1.6; min-height: 60px; margin-bottom: 15px; color: #eee; }
-        .ai-input-wrap { background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; padding: 8px 15px; }
+        /* 1. 顶层智慧体核心 (唯一入口) */
+        .ai-terminal { background: #000; color: #fff; margin: 15px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .ai-display { font-size: 15px; line-height: 1.6; min-height: 80px; margin-bottom: 15px; color: #00ff00; font-family: monospace; }
+        .ai-input-wrap { background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; padding: 10px 15px; }
         .ai-input-wrap input { border: none; background: transparent; color: #fff; flex: 1; outline: none; font-size: 14px; }
 
-        /* 3. 导航复刻 (4个核心维度) */
-        .nav-tabs { display: flex; gap: 20px; padding: 10px 15px; border-bottom: 1px solid #eee; overflow-x: auto; scrollbar-width: none; background: #fff; }
-        .tab { cursor: pointer; white-space: nowrap; font-size: 13px; color: var(--gray); padding-bottom: 8px; transition: 0.3s; }
-        .tab.active { color: var(--blue); border-bottom: 2px solid var(--blue); font-weight: bold; }
+        /* 2. 复刻：功能决策仪表盘 (按键体现) */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 15px 20px 15px; }
+        .dash-btn { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px 5px; text-align: center; transition: 0.2s; cursor: pointer; }
+        .dash-btn:active { background: #f0f0f0; transform: scale(0.95); }
+        .dash-icon { font-size: 18px; display: block; margin-bottom: 5px; }
+        .dash-label { font-size: 11px; color: var(--text); font-weight: 600; }
 
-        /* 4. 信号广场复刻 (数字化卡片) */
-        .content { padding: 15px; }
-        .signal-card { border: 1px solid #eee; border-radius: 14px; padding: 15px; margin-bottom: 20px; background: #fff; transition: 0.3s; }
-        .signal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .coin-info b { font-size: 17px; }
-        .coin-info span { font-size: 11px; color: var(--gray); margin-left: 5px; }
-        .growth { color: var(--green); font-weight: bold; font-size: 14px; }
+        /* 3. 数字化内容流 */
+        .content { padding: 0 15px; }
+        .res-card { background: #fff; border-radius: 16px; border: 1px solid #eee; padding: 15px; margin-bottom: 20px; }
+        .res-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .res-tag { font-size: 10px; background: var(--blue); color: #fff; padding: 2px 6px; border-radius: 4px; }
+        .res-val { color: var(--green); font-weight: bold; font-size: 14px; }
         
-        /* 能量条：复刻共振信号可视化 */
-        .resonance-bar { height: 4px; background: #eee; border-radius: 2px; margin: 10px 0; overflow: hidden; position: relative; }
-        .resonance-fill { height: 100%; background: linear-gradient(90deg, var(--blue), #5ac8fa); border-radius: 2px; }
-        
-        .signal-body { font-size: 13px; color: #444; line-height: 1.5; margin-bottom: 15px; }
-        
-        /* 10个功能按钮中的操作类 (4个) */
-        .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .act-btn { border: 1px solid #eee; padding: 6px 12px; border-radius: 6px; font-size: 11px; color: #666; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-        .act-btn:active { background: #f0f0f0; }
+        /* 4. 操作类按键 (卡片内部) */
+        .op-row { display: flex; gap: 8px; margin-top: 15px; }
+        .op-btn { flex: 1; border: 1px solid #eee; padding: 8px; border-radius: 8px; font-size: 11px; text-align: center; color: #555; background: var(--card); }
 
-        /* 底部与营销 */
-        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 20px 0; text-align: center; z-index: 101; }
-        .btn-main { background: var(--blue); color: #fff; padding: 12px 60px; border-radius: 30px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0,122,255,0.3); }
+        /* 5. 营销转化按键 */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 20px 0; text-align: center; z-index: 100; }
+        .btn-vip { background: #000; color: #fff; padding: 12px 30%; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block; }
     </style>
 </head>
 <body>
 
-<div class="dashboard">
-    <div class="stat-row">
-        <div class="stat-card">
-            <span class="stat-label">全网热度</span>
-            <span class="stat-val" id="val-hot">82.1</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">共振信号</span>
-            <span class="stat-val" id="val-sig">14路</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Smart Money</span>
-            <span class="stat-val" style="color:var(--green)">净买入</span>
-        </div>
-    </div>
-</div>
-
 <div class="ai-terminal">
-    <div class="ai-response" id="aiOutput">你好，我是龙马。已同步 ChainInsight 全链实时信号。正在扫描潜在 Alpha...</div>
+    <div class="ai-display" id="aiOutput">> LONGMA AI SYSTEM READY...<br>> 已深度链接 ChainInsight 信号库。<br>> 请下达指令或点击下方功能面板。</div>
     <div class="ai-input-wrap">
-        <input type="text" id="aiInput" placeholder="输入币种、地址或智慧指令..." onkeypress="if(event.keyCode==13) runAlpha()">
-        <span onclick="runAlpha()" style="cursor:pointer">⚡</span>
+        <input type="text" id="userInput" placeholder="输入币种、逻辑或语音指令..." onkeypress="if(event.keyCode==13) chat()">
+        <span onclick="chat()" style="cursor:pointer">🎙️</span>
     </div>
 </div>
 
-<div class="nav-tabs">
-    <div class="tab active" onclick="switchTab('all')">信号广场</div>
-    <div class="tab" onclick="switchTab('info')">社群 AI 总结</div>
-    <div class="tab" onclick="switchTab('wallet')">钱包监控</div>
-    <div class="tab" onclick="switchTab('res')">共振看板</div>
-</div>
-
-<div style="margin: 15px; background: #fff9db; padding: 12px; border-radius: 12px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ffe066;">
-    <span>💎 <b>VIP 特权</b>：解锁 100% 胜率聪明钱地址库</span>
-    <button style="background:#000; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-weight:bold;" onclick="window.open('https://twitter.com')">立即体验</button>
+<div class="dashboard-grid">
+    <div class="dash-btn" onclick="trigger('广场')">
+        <span class="dash-icon">🔥</span>
+        <span class="dash-label">金狗广场</span>
+    </div>
+    <div class="dash-btn" onclick="trigger('信息')">
+        <span class="dash-icon">💬</span>
+        <span class="dash-label">社群总结</span>
+    </div>
+    <div class="dash-btn" onclick="trigger('监控')">
+        <span class="dash-icon">🎯</span>
+        <span class="dash-label">钱包监控</span>
+    </div>
+    <div class="dash-btn" onclick="trigger('共振')">
+        <span class="dash-icon">📡</span>
+        <span class="dash-label">共振信号</span>
+    </div>
 </div>
 
 <div class="content" id="feed">
     </div>
 
 <div class="footer">
-    <a href="https://twitter.com/你的账号" class="btn-main">关注龙马主理人</a>
+    <div style="font-size: 10px; color: var(--gray); margin-bottom: 10px;">—— 智慧体已连续运行 500+ 天 ——</div>
+    <a href="https://twitter.com" class="btn-vip">关注龙马 & 订阅 VIP</a>
 </div>
 
 <script>
-    const data = [
-        { date: '3月17日', coin: 'DSNT', growth: '+1240%', res: 92, type: 'all', desc: '触发多社群讨论共振。3个聪明钱地址入场，推特情绪值极高。' },
-        { date: '3月16日', coin: 'SOL-Alpha', growth: '+15.4%', res: 75, type: 'res', desc: '三周期金叉共振。4H 线放量突破阻力位，机构资金流向：净流入。' },
-        { date: '3月15日', coin: 'Kagami-Track', growth: '监控中', res: 60, type: 'wallet', desc: '顶级 KOL 钱包异动。正在归集主币，疑似为下一波行情蓄势。' }
-    ];
+    const out = document.getElementById('aiOutput');
+    const feed = document.getElementById('feed');
 
-    function render(filter = 'all') {
-        const feed = document.getElementById('feed');
-        feed.innerHTML = '';
-        data.filter(i => filter === 'all' || i.type === filter).forEach(i => {
-            feed.innerHTML += `
-                <div class="signal-card">
-                    <div class="signal-header">
-                        <div class="coin-info"><b>$${i.coin}</b><span>${i.date}</span></div>
-                        <div class="growth">${i.growth}</div>
-                    </div>
-                    <div style="font-size:10px; color:var(--gray)">共振能量值: ${i.res}%</div>
-                    <div class="resonance-bar"><div class="resonance-fill" style="width:${i.res}%"></div></div>
-                    <div class="signal-body">${i.desc}</div>
-                    <div class="action-row">
-                        <div class="act-btn">看K线 📈</div>
-                        <div class="act-btn" onclick="alert('地址已复制')">复制地址 📋</div>
-                        <div class="act-btn">深度研报 🔭</div>
-                        <div class="act-btn">分享 📤</div>
-                    </div>
-                </div>`;
-        });
-    }
-
-    function runAlpha() {
-        const val = document.getElementById('aiInput').value;
-        const out = document.getElementById('aiOutput');
-        out.innerText = "> 正在接入 ChainInsight 数据接口...\n> 检索最近 24h 全网共振...";
+    // 模拟智慧体根据按键触发
+    function trigger(type) {
+        out.innerHTML = `> 正在调取【${type}】核心数据流...<br>> 正在计算共振概率...`;
         setTimeout(() => {
-            out.innerText = "针对“" + val + "”，龙马智慧体给出以下量化评估：共振指数 88.5，主力持仓稳定，建议在当前支撑位进行阶梯布局。";
-        }, 1000);
+            if(type === '广场') {
+                showData('金狗信号', '$DSNT', '+1240.5%', '监测到 12 个社群共振，主力地址持续流入。');
+            } else if(type === '监控') {
+                showData('钱包异动', 'KOL Kagami', '实时买入', '地址 0x71...af2 正在加仓金铲子。');
+            } else {
+                showData('共振分析', '全网趋势', '看涨指数 88', '多维度信号在 168 支撑位达成共识。');
+            }
+        }, 800);
     }
 
-    function switchTab(t) {
-        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-        event.target.classList.add('active');
-        render(t);
+    function chat() {
+        const val = document.getElementById('userInput').value;
+        if(!val) return;
+        out.innerHTML = `> 智慧体正在检索：${val}...<br>> 正在生成数字化推演报告...`;
+        setTimeout(() => {
+            showData('智慧推演', val.toUpperCase(), '胜率 82%', '基于 ChainInsight 数据，建议在该位置分批建仓。');
+            document.getElementById('userInput').value = "";
+        }, 1200);
     }
 
-    setInterval(() => {
-        document.getElementById('val-hot').innerText = (80 + Math.random()*5).toFixed(1);
-    }, 3000);
+    function showData(tag, title, val, body) {
+        const card = `
+            <div class="res-card">
+                <div class="res-header">
+                    <span class="res-tag">${tag}</span>
+                    <span class="res-val">${val}</span>
+                </div>
+                <div style="font-weight:bold; font-size:16px; margin-bottom:8px;">${title}</div>
+                <div style="font-size:13px; color:#666; line-height:1.5;">${body}</div>
+                <div class="op-row">
+                    <div class="op-btn">看K线 📈</div>
+                    <div class="op-btn">复刻地址 📋</div>
+                    <div class="op-btn">深度研报 🔭</div>
+                    <div class="op-btn">分享 📤</div>
+                </div>
+            </div>
+        `;
+        feed.innerHTML = card + feed.innerHTML;
+    }
 
-    render();
+    // 初始化显示 3月17日 的一条数据
+    showData('历史战绩', '昨日金狗回顾', '+886%', '龙马智慧体于 3月17日 成功捕获关键信号。');
 </script>
 </body>
 </html>
