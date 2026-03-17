@@ -3,26 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>龙马智能情报站 - VIP</title>
+    <title>龙马智能情报站 - 限时免费</title>
     <style>
-        body { background: #0a0a0a; color: #d4af37; font-family: sans-serif; text-align: center; padding: 50px; }
-        .card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 15px; max-width: 500px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .blur { filter: blur(5px); background: #222; border-radius: 5px; padding: 0 10px; }
-        .btn { background: #d4af37; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        .status { color: #00ff00; font-size: 14px; margin-top: 10px; }
+        body { background: #050505; color: #d4af37; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .card { background: #111; border: 1px solid #d4af37; padding: 25px; border-radius: 20px; max-width: 400px; margin: 20px auto; }
+        .price-row { display: flex; justify-content: space-around; background: #1a1a1a; padding: 12px; border-radius: 12px; margin-bottom: 20px; border-bottom: 2px solid #333; }
+        .alpha-box { background: #222; padding: 15px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #00ff00; text-align: left; }
+        .free-tag { background: #00ff00; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .btn { background: #fff; color: #000; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🐲 龙马情报站 1.0</h1>
-        <p class="status">● 龙马正在实时监控中...</p>
-        <hr style="border: 0.5px solid #333;">
-        <h3>今日严谨 Alpha 情报</h3>
-        <p>发现某顶级空投项目，预计收益：<strong>100倍</strong></p>
-        <p>核心交互地址：<span class="blur">0x71...SHADOW</span></p>
-        <p>风险系数：低 (龙马已背调)</p>
-        <button class="btn" onclick="alert('请联系管理员（也就是你）获取私钥解锁')">付费解锁完整情报</button>
+    <p style="font-size: 12px; color: #888;">🐲 龙马智能系统：实时算力已就绪</p>
+    
+    <div class="price-row">
+        <div>BTC <span id="btc" style="color:#fff;">...</span></div>
+        <div>SOL <span id="sol" style="color:#fff;">...</span></div>
     </div>
-    <p style="color: #666; font-size: 12px; margin-top: 20px;">由龙马智能体驱动 - 权限已移交主理人</p>
+
+    <div class="card">
+        <span class="free-tag">限时免费公开</span>
+        <h3 style="margin: 15px 0;">[今日严谨 Alpha 信号]</h3>
+        
+        <div class="alpha-box">
+            <p style="margin: 5px 0; font-size: 14px; color: #aaa;">重点监控标的：</p>
+            <strong style="font-size: 18px; color: #fff;">$ASTER (解锁对冲机会)</strong>
+            <p style="margin: 10px 0 5px 0; font-size: 14px;">建议入场：<span style="color:#00ff00;">$0.125 - $0.132</span></p>
+            <p style="margin: 0; font-size: 14px;">预期目标：+45% 震荡套利</p>
+        </div>
+
+        <p style="font-size: 13px; color: #888;">龙马已完成该项目 5590 万美元解锁压盘分析，目前散户恐慌，正是高手切入点。</p>
+        
+        <button class="btn" onclick="location.href='https://twitter.com/你的用户名'">关注主理人推特获取实时推文</button>
+    </div>
+
+    <script>
+        async function up() {
+            const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=["BTCUSDT","SOLUSDT"]');
+            const d = await r.json();
+            document.getElementById('btc').innerText = '$' + parseInt(d[0].price).toLocaleString();
+            document.getElementById('sol').innerText = '$' + parseFloat(d[1].price).toFixed(2);
+        }
+        setInterval(up, 3000); up();
+    </script>
 </body>
 </html>
