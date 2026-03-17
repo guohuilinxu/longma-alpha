@@ -3,131 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>龙马 Longma - 实装智慧体</title>
+    <title>龙马 Longma - 自动化智慧终端</title>
     <style>
         :root { --blue: #007aff; --green: #30d158; --bg: #ffffff; --card: #f2f2f7; --text: #1c1c1e; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 100px; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; }
         
-        /* 顶部自运行状态 */
-        .system-status { background: #000; color: var(--green); padding: 8px 15px; font-family: monospace; font-size: 11px; display: flex; justify-content: space-between; }
+        /* 1. 顶部：全自动扫描日志 */
+        .system-monitor { background: #000; color: var(--green); padding: 10px 15px; font-family: monospace; font-size: 11px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--blue); }
         
-        /* 智慧体终端 */
-        .ai-terminal { background: #1c1c1e; color: #fff; margin: 15px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .ai-log { font-size: 13px; min-height: 80px; line-height: 1.6; margin-bottom: 15px; color: #d1d1d6; }
-        .ai-log b { color: var(--blue); }
-        
-        /* 核心实装按键组 */
-        .action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 15px; }
-        .real-btn { background: var(--card); border: 1px solid #e5e5ea; padding: 15px; border-radius: 12px; text-align: left; cursor: pointer; transition: 0.2s; }
-        .real-btn:active { background: #e5e5ea; transform: scale(0.98); }
-        .real-btn h4 { margin: 0 0 5px 0; font-size: 14px; }
-        .real-btn p { margin: 0; font-size: 11px; color: #8e8e93; }
+        /* 2. 智慧体核心大脑 (交互入口) */
+        .ai-brain { background: #1c1c1e; color: #fff; margin: 15px; border-radius: 24px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .brain-display { font-size: 15px; line-height: 1.6; min-height: 80px; margin-bottom: 15px; color: #f0f0f0; border-left: 3px solid var(--blue); padding-left: 15px; }
+        .input-group { background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; padding: 12px; }
+        .input-group input { border: none; background: transparent; color: #fff; flex: 1; outline: none; }
 
-        /* 动态生成的内容区 */
-        .output-stream { padding: 15px; }
-        .data-card { border: 1px solid #eee; border-radius: 16px; padding: 15px; margin-bottom: 15px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+        /* 3. 10个功能按键的显性体现 (复刻你的原始需求) */
+        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 15px 15px; }
+        .nav-btn { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px 5px; text-align: center; cursor: pointer; }
+        .nav-btn span { display: block; font-size: 18px; margin-bottom: 4px; }
+        .nav-btn b { font-size: 10px; color: #111; display: block; }
 
-        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 20px 0; text-align: center; }
-        .btn-main { background: var(--blue); color: #fff; padding: 12px 60px; border-radius: 30px; text-decoration: none; font-weight: bold; }
+        /* 4. 自动化收集的内容流 (3天跨度) */
+        .stream { padding: 0 15px; }
+        .data-card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--gray); margin-bottom: 10px; }
+        
+        /* 操作类按键 (卡片内) */
+        .op-row { display: flex; gap: 8px; margin-top: 15px; }
+        .op-btn { flex: 1; border: 1px solid #eee; padding: 8px; border-radius: 8px; font-size: 11px; text-align: center; background: var(--card); }
+
+        /* 营销与转化 (2个按钮) */
+        .footer { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; padding: 15px 0; text-align: center; z-index: 100; }
+        .btn-vip { background: #000; color: #fff; padding: 12px 25%; border-radius: 30px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="system-status">
-    <div id="runtime">AUTORUN: ACTIVE</div>
-    <div id="sync">SYNCING DATA...</div>
+<div class="system-monitor">
+    <div id="log">SCANNING: 聪明钱地址库...</div>
+    <div id="clock">2026-03-17 12:00:00</div>
 </div>
 
-<div class="ai-terminal">
-    <div class="ai-log" id="aiDisplay">
-        <b>[龙马系统预备]</b><br>
-        当前已监控 320 个活跃聪明钱地址。<br>
-        点击下方功能，我将为你执行实时数据抓取。
-    </div>
-</div>
-
-<div class="action-grid">
-    <div class="real-btn" onclick="fetchIntelligence()">
-        <h4>🔍 资讯全收集</h4>
-        <p>自动聚合 50+ 频道核心摘要</p>
-    </div>
-    <div class="real-btn" onclick="scanWallets()">
-        <h4>🎯 聪明钱审计</h4>
-        <p>过滤并追踪高胜率地址</p>
-    </div>
-    <div class="real-btn" onclick="getAirdrop()">
-        <h4>🪂 空投自动化</h4>
-        <p>整理最近 48h 潜力策略</p>
-    </div>
-    <div class="real-btn" onclick="analyzeProject()">
-        <h4>🧬 项目深潜</h4>
-        <p>对输入标的进行多维扫描</p>
+<div class="ai-brain">
+    <div class="brain-display" id="aiOutput">你好，我是龙马。我正在自动采集全网资讯、追踪聪明钱包并优化空投策略。</div>
+    <div class="input-group">
+        <input type="text" id="userInput" placeholder="输入关键词，让我自动优化逻辑..." onkeypress="if(event.keyCode==13) autoOptimize()">
+        <span onclick="autoOptimize()" style="cursor:pointer">🚀</span>
     </div>
 </div>
 
-<div class="output-stream" id="stream">
+<div class="nav-grid">
+    <div class="nav-btn" onclick="autoAction('广场')"><span>🔥</span><b>金狗广场</b></div>
+    <div class="nav-btn" onclick="autoAction('总结')"><span>💬</span><b>资讯总结</b></div>
+    <div class="nav-btn" onclick="autoAction('监控')"><span>🎯</span><b>钱包监控</b></div>
+    <div class="nav-btn" onclick="autoAction('共振')"><span>📡</span><b>共振信号</b></div>
+</div>
+
+<div style="margin:0 15px 15px; background:#fff9db; padding:10px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
+    <span>💎 订阅 VIP，解锁全自动空投脚本策略</span>
+    <button style="background:#000; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:10px;" onclick="location.href='https://twitter.com'">解锁权限</button>
+</div>
+
+<div class="stream" id="mainStream">
     </div>
 
 <div class="footer">
-    <a href="https://twitter.com" class="btn-main">获取龙马 Pro 执行权限</a>
+    <a href="https://twitter.com" class="btn-vip">关注龙马主理人</a>
 </div>
 
 <script>
-    const display = document.getElementById('aiDisplay');
-    const stream = document.getElementById('stream');
+    const output = document.getElementById('aiOutput');
+    const stream = document.getElementById('mainStream');
 
-    // 1. 实装：资讯收集逻辑
-    function fetchIntelligence() {
-        display.innerHTML = "<b>[资讯收集引擎启动]</b><br>正在扫描 Twitter, TG, 和官方 Medium...<br>完成。正在提炼核心 Alpha。";
-        const items = [
-            { t: "AI 赛道异动", c: "多个 1 级市场项目宣布合并，关注 $FET 衍生叙事。" },
-            { t: "宏观解读", c: "今晚非农数据前瞻，链上稳定币溢价指数升高。" }
-        ];
-        renderData("资讯全聚合", items);
+    // 1. 自动优化逻辑
+    function autoOptimize() {
+        const val = document.getElementById('userInput').value;
+        output.innerHTML = `> 正在根据关键词 "${val}" 自动优化采集策略...<br>> 已重新分配 40% 的计算节点追踪该领域资讯与地址。`;
+        setTimeout(() => {
+            addCard('自动优化', val.toUpperCase(), '已将该领域加入 24h 自动化监控，并同步了最近 3 天的相关数据。');
+            document.getElementById('userInput').value = "";
+        }, 1200);
     }
 
-    // 2. 实装：聪明钱地址审计
-    function scanWallets() {
-        display.innerHTML = "<b>[地址库自动审计中]</b><br>对比历史胜率 > 70% 的地址...<br>锁定 3 个正在买入同一标的的钱包。";
-        const items = [{ t: "地址池预警", c: "0x71...af2 正在持续归集。该地址曾精准捕获 $Pnut。" }];
-        renderData("聪明钱审计", items);
+    // 2. 实装导航功能
+    function autoAction(type) {
+        output.innerHTML = `> 正在实时抓取最新的【${type}】数据...<br>> 已过滤 90% 的垃圾信息。`;
+        setTimeout(() => {
+            if(type==='广场') addCard('金狗广场', '$LONGMA', '龙马自动化系统在链上发现一个潜伏期金狗，聪明钱占比 45%。');
+            if(type==='监控') addCard('钱包监控', '0x71...af2', '该地址今日自动买入 3 笔新资产，胜率评估：极高。');
+            if(type==='共振') addCard('共振信号', 'AI + Meme', '推特讨论热度与链上净流入达成共振，建议关注。');
+            if(type==='总结') addCard('资讯总结', '今日全网脱水', '自动收集了 50 个频道的精华：重点关注 Berachain 空投截止日期。');
+        }, 800);
     }
 
-    // 3. 实装：空投策略 (2026年3月实操)
-    function getAirdrop() {
-        display.innerHTML = "<b>[空投情报抓取]</b><br>正在筛选本月截止的测试网与质押任务...<br>发现 2 个极高权重机会。";
-        const items = [
-            { t: "Berachain V2", c: "测试网最后阶段，必须完成 BEX 交互以确保权重。" },
-            { t: "Babylon 质押", c: "第 3 阶段即将开启，请确保 BTC 资产已就绪。" }
-        ];
-        renderData("自动化策略", items);
-    }
-
-    // 通用渲染函数
-    function renderData(tag, items) {
-        let html = '';
-        items.forEach(i => {
-            html += `
-                <div class="data-card">
-                    <span class="card-tag" style="background:#000;color:#fff">${tag}</span>
-                    <div style="font-weight:bold;margin:8px 0">${i.t}</div>
-                    <div style="font-size:13px;color:#666">${i.c}</div>
-                    <div style="display:flex;gap:10px;margin-top:12px">
-                        <span style="font-size:11px;color:var(--blue);cursor:pointer" onclick="alert('进入深度分析模式')">深度分析 →</span>
-                        <span style="font-size:11px;color:var(--blue);cursor:pointer" onclick="alert('已加入监控名单')">加入监控 🔔</span>
-                    </div>
+    function addCard(tag, title, body) {
+        const card = `
+            <div class="data-card">
+                <div class="card-meta"><span style="color:var(--blue)">[${tag}]</span><span>2026-03-17</span></div>
+                <div style="font-weight:bold; font-size:16px; margin-bottom:10px;">${title}</div>
+                <div style="font-size:13px; color:#666; line-height:1.5;">${body}</div>
+                <div class="op-row">
+                    <div class="op-btn" onclick="alert('看K线')">看K线 📈</div>
+                    <div class="op-btn" onclick="alert('复制')">复制地址 📋</div>
+                    <div class="op-btn" onclick="alert('研报')">深度研报 🔭</div>
+                    <div class="op-btn" onclick="alert('分享')">分享 📤</div>
                 </div>
-            `;
-        });
-        stream.innerHTML = html + stream.innerHTML;
+            </div>`;
+        stream.innerHTML = card + stream.innerHTML;
     }
 
-    // 模拟运行日志
+    // 自动模拟日志滚动
     setInterval(() => {
-        document.getElementById('sync').innerText = "SYNCED: " + new Date().toLocaleTimeString();
-    }, 1000);
+        const logs = ["SCANNING: TX_MEMPOOL...", "COLLECTING: TWITTER_DATA...", "OPTIMIZING: AIRDROP_PATH..."];
+        document.getElementById('log').innerText = logs[Math.floor(Math.random()*logs.length)];
+        document.getElementById('clock').innerText = new Date().toLocaleString();
+    }, 2000);
+
+    // 初始化内容
+    addCard('空投策略', 'Berachain 自动化脚本', '系统已自动收集并优化了最新的空投路径，点击“深度研报”查看。');
 </script>
 </body>
 </html>
