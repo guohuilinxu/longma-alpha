@@ -3,235 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>龙马 Longma | 暗黑科技终端</title>
+    <title>龙马 Longma | 币圈生产力终端</title>
     <style>
-        /* 1. 专业暗黑科技风配色方案 */
-        :root { 
-            --bg-dark: #0a0a0c; 
-            --panel-dark: #16161a; 
-            --border-dark: #2a2a32;
-            --text-main: #e5e5e7; 
-            --text-gray: #8e8e93;
-            --tech-blue: #007aff; 
-            --tech-green: #34c759; /* 高亮绿色：用于涨幅/安全 */
-            --tech-purple: #bf5af2; /* 电光紫色：用于金狗 */
-            --tech-red: #ff453a; /* 高亮红色：用于跌幅/警告 */
-        }
+        :root { --bg: #f8f9fa; --blue: #007aff; --dark: #1c1c1e; --gray: #8e8e93; }
+        body { background: var(--bg); color: var(--dark); font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 80px; }
         
-        body { background: var(--bg-dark); color: var(--text-main); font-family: -apple-system, system-ui, "SF Pro", sans-serif; margin: 0; padding-bottom: 120px; letter-spacing: -0.2px; }
+        /* 顶部看板：权威感来源 */
+        .header { background: #fff; padding: 25px 20px; border-bottom: 1px solid #e5e5ea; }
+        .header h1 { font-size: 26px; margin: 0; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        .header p { color: var(--gray); font-size: 14px; margin: 8px 0 0; }
         
-        /* 顶部：情绪感应状态栏 */
-        .status-bar { background: rgba(0,0,0,0.8); color: var(--tech-green); padding: 12px 18px; font-family: "SF Mono", monospace; font-size: 11px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border-dark); backdrop-filter: blur(10px); }
-        .live-dot { height: 7px; width: 7px; background: var(--tech-green); border-radius: 50%; display: inline-block; margin-right: 6px; box-shadow: 0 0 6px var(--tech-green); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        /* 实时情绪：每天必看 */
+        .indicator-row { display: flex; gap: 10px; margin: 20px; }
+        .indicator { background: #fff; flex: 1; padding: 15px; border-radius: 16px; border: 1px solid #e5e5ea; text-align: center; }
+        .indicator b { display: block; font-size: 18px; color: var(--blue); }
+        .indicator span { font-size: 11px; color: var(--gray); }
 
-        /* 搜索区：沉浸式 */
-        .search-area { margin: 15px; }
-        .search-box { background: var(--panel-dark); border-radius: 14px; display: flex; padding: 12px 16px; align-items: center; border: 1px solid var(--border-dark); transition: border-color 0.2s; }
-        .search-box:focus-within { border-color: var(--tech-blue); }
-        .search-box input { border: none; background: transparent; color: #fff; flex: 1; outline: none; font-size: 14px; }
-        .search-box input::placeholder { color: #555; }
+        /* 功能分区 */
+        .section-label { font-size: 13px; font-weight: 700; color: var(--gray); padding: 10px 20px; text-transform: uppercase; }
+        
+        .tool-card { background: #fff; margin: 0 15px 12px; border-radius: 20px; padding: 20px; border: 1px solid #e5e5ea; position: relative; }
+        .tool-card:active { background: #f2f2f7; }
+        
+        .tool-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .tool-tag { font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 20px; background: #f2f2f7; }
+        .tag-active { background: #eaf2ff; color: var(--blue); }
 
-        /* 功能矩阵 */
-        .nav-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 15px 15px; }
-        .nav-item { background: var(--panel-dark); border-radius: 16px; padding: 15px 5px; text-align: center; cursor: pointer; border: 1px solid var(--border-dark); transition: 0.2s; }
-        .nav-item:active { transform: scale(0.95); background: #202025; }
-        .nav-item span { display: block; font-size: 22px; margin-bottom: 6px; }
-        .nav-item b { font-size: 11px; font-weight: 600; color: var(--text-gray); }
+        .tool-card h3 { margin: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .tool-card p { font-size: 13px; color: #666; line-height: 1.6; margin: 12px 0 18px; }
 
-        /* 情报动态流：卡片视觉升级 */
-        .card { background: var(--panel-dark); border-radius: 20px; padding: 18px; margin: 0 15px 12px; border: 1px solid var(--border-dark); animation: slideIn 0.3s ease-out; position: relative; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* 权威入口：直接连接世界级工具 */
+        .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .portal-btn { background: #f8f9fa; border: 1px solid #eee; padding: 10px; border-radius: 12px; font-size: 12px; text-align: center; font-weight: 600; text-decoration: none; color: #333; }
         
-        .tag { font-size: 10px; font-weight: 700; color: #fff; background: var(--tech-purple); padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 10px; }
-        .whale-tag { background: #ff9f0a; } /* 巨鲸高亮橙 */
-        
-        .title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .title { font-size: 19px; font-weight: 800; color: #fff; }
-        .rank { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(52, 199, 89, 0.1); color: var(--tech-green); font-weight: bold; }
-        
-        .desc { font-size: 14px; color: var(--text-main); line-height: 1.6; margin-bottom: 15px; }
-        .ca-box { font-size: 11px; color: var(--text-gray); margin-bottom: 15px; font-family: "SF Mono", monospace; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; word-break:break-all; border: 1px solid var(--border-dark); }
-        
-        /* 按钮：高内聚布局 */
-        .btn-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .action-btn { background: #2a2a32; border-radius: 12px; padding: 12px 2px; font-size: 11px; font-weight: bold; text-align: center; cursor: pointer; color: #fff; transition: 0.2s; }
-        .action-btn:active { background: #3a3a45; }
-        .action-btn.primary { background: var(--tech-blue); }
-
-        .footer { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); padding: 20px 0; text-align: center; border-top: 1px solid var(--border-dark); }
-        .btn-main { background: var(--text-main); color: #000; padding: 14px 28%; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; }
+        /* 底部导航 */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border-top: 1px solid #e5e5ea; padding: 12px 0; display: flex; justify-content: space-around; }
+        .nav-link { text-decoration: none; color: var(--gray); font-size: 11px; text-align: center; }
+        .nav-link b { display: block; font-size: 20px; margin-bottom: 2px; }
+        .nav-link.active { color: var(--blue); }
     </style>
 </head>
 <body>
 
-<div class="status-bar">
-    <div id="sysLog"><span class="live-dot"></span>LONGMA_V20: MONITORING</div>
-    <div id="clock">00:00:00</div>
+<div class="header">
+    <h1>🐲 龙马终端 <span style="font-size: 14px; font-weight: normal; background: #000; color: #fff; padding: 2px 8px; border-radius: 6px;">PRO</span></h1>
+    <p>深耕币圈投研，只为新进者指明盈利方向。</p>
 </div>
 
-<div class="search-area">
-    <div class="search-box">
-        <input type="text" id="userInput" placeholder="搜索 SOL CA、Telegram 群链接..." onkeypress="if(event.keyCode==13) handleSearch()">
-        <span onclick="handleSearch()" style="cursor:pointer; font-size:18px;">🔍</span>
+<div class="indicator-row">
+    <div class="indicator">
+        <b id="gasPrice">25 Gwei</b>
+        <span>以太坊 Gas</span>
+    </div>
+    <div class="indicator">
+        <b>48.2</b>
+        <span>恐惧贪婪指数</span>
     </div>
 </div>
 
-<div class="nav-matrix">
-    <div class="nav-item" onclick="fetchData('tokens')"><span>🔥</span><b>金狗广场</b></div>
-    <div class="nav-item" onclick="fetchData('news')"><span>📰</span><b>研报总结</b></div>
-    <div class="nav-item" onclick="fetchData('wallets')"><span>🕵️</span><b>巨鲸审计</b></div>
-    <div class="nav-item" onclick="fetchData('airdrops')"><span>🪂</span><b>空投策略</b></div>
+<div class="section-label">核心盈利车间</div>
+
+<div class="tool-card">
+    <div class="tool-header">
+        <span class="tool-tag tag-active">体力变现 · 确定性</span>
+        <span style="font-size: 12px; color: var(--blue);">🔥 热门交互</span>
+    </div>
+    <h3>🪂 权威空投任务台</h3>
+    <p>逻辑：获取项目方筹码。不建议盲目跟风，龙马为你挑选了全球最公认的两大空投追踪站。</p>
+    <div class="portal-grid">
+        <a href="https://dropstab.com/" class="portal-btn">DropsTab 监控</a>
+        <a href="https://defillama.com/airdrops" class="portal-btn">DefiLlama 空投</a>
+    </div>
 </div>
 
-<div id="mainStream"></div>
+<div class="tool-card">
+    <div class="tool-header">
+        <span class="tool-tag">眼光博弈 · 链上审计</span>
+    </div>
+    <h3>🛡️ 链上金狗风控台</h3>
+    <p>逻辑：冲狗前必看。通过专业审计工具检查池子是否锁定，防止归零。这里提供的是币圈职业选手的标配。</p>
+    <div class="portal-grid">
+        <a href="https://dexscreener.com/" class="portal-btn">DexScreener 看盘</a>
+        <a href="https://gopluslabs.io/" class="portal-btn">GoPlus 安全检测</a>
+    </div>
+</div>
 
-<div class="footer"><a href="https://twitter.com" class="btn-main">关注龙马主理人</a></div>
+<div class="tool-card">
+    <div class="tool-header">
+        <span class="tool-tag">认知复利 · 深度阅读</span>
+    </div>
+    <h3>📚 职业投研研报区</h3>
+    <p>逻辑：拒绝小道消息，只读专业研报。了解大资金在布局什么赛道（AI、L2、RWA）。</p>
+    <div class="portal-grid">
+        <a href="https://www.theblock.co/" class="portal-btn">The Block 资讯</a>
+        <a href="https://messari.io/" class="portal-btn">Messari 深度研报</a>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="#" class="nav-link active"><b>🏛️</b>主页</a>
+    <a href="https://t.me/your_channel" class="nav-link"><b>✈️</b>电报群</a>
+    <a href="#" class="nav-link"><b>👤</b>关于我</a>
+</div>
 
 <script>
-    const stream = document.getElementById('mainStream');
-    const sysLog = document.getElementById('sysLog');
-
-    // 2. BUG 修复核心：数据预处理算法 (防止 undefined)
-    function sanitize(item) {
-        // 智能检查：如果发现 'undefined' 字符串或空值，自动补位
-        const safeItem = { ...item };
-        const fallbackNames = ["AlphaProject", "BetaGem", "DeltaSignal", "GammaToken"];
-        const randomIndex = Math.floor(Math.random() * fallbackNames.length);
-
-        // 如果名字是 undefined 或 空
-        if (typeof safeItem.title === 'undefined' || safeItem.title === null || safeItem.title === "" || safeItem.title === "undefined") {
-            // 如果有 symbol 用 symbol，否则随机给一个
-            safeItem.title = safeItem.symbol || fallbackNames[randomIndex];
-        }
-
-        // 如果描述是 undefined
-        if (typeof safeItem.body === 'undefined' || safeItem.body === null || safeItem.body === "" || safeItem.body === "undefined") {
-            safeItem.body = "链上异动信号，安全性初筛通过。龙马建议：在内地环境务必审计池子锁定状态。";
-        }
-
-        return safeItem;
-    }
-
-    async function fetchData(type) {
-        const timestamp = new Date().getTime();
-        const fileMap = { tokens: './data_tokens.json', airdrops: './data_airdrops.json', wallets: './data_wallets.json' };
-
+    // 增加一点动态权威感：实时获取 Gas 价格（示例）
+    async function updateGas() {
         try {
-            if (fileMap[type]) {
-                const res = await fetch(`${fileMap[type]}?t=${timestamp}`);
-                const rawData = await res.json();
-                
-                // 3. 在渲染前应用“数据预处理算法”
-                const cleanData = rawData.map(sanitize);
-                renderCards(type, cleanData);
-            } else {
-                renderMock(type);
-            }
-        } catch (e) { 
-            sysLog.innerHTML = `<span class="live-dot" style="background:var(--tech-red);box-shadow:0 0 5px var(--tech-red);"></span>LONGMA: CLOUD_OFFLINE`;
-            renderMock(type); 
-        }
+            // 这里以后可以接入真正的 Etherscan API
+            const mockGas = Math.floor(Math.random() * 10) + 20;
+            document.getElementById('gasPrice').innerText = mockGas + ' Gwei';
+        } catch(e) {}
     }
-
-    function renderCards(type, data) {
-        stream.innerHTML = "";
-        data.forEach(item => {
-            if(type === 'tokens') {
-                addCard('金狗广场', item.title, item.body, item.tokenAddress, 'AAA 安全');
-            } else if(type === 'wallets') {
-                addWhaleCard(item.title, item.body, item.rank || '异动');
-            } else {
-                addCard('空投策略', item.title, item.body, '', item.rank || '必做');
-            }
-        });
-    }
-
-    function renderMock(type) {
-        stream.innerHTML = "";
-        // 这里的 Mock 数据也需要过一遍 sanitize，防止本地数据写错
-        const mocks = {
-            news: [{title:'Solana 情绪指数', body:'稳定币流入量超过流出量 120%，看涨情绪浓厚。', rank:'趋势'}],
-            wallets: [{title:'巨鲸地址 6p6W...5F1z', body:'监测到该地址正在分发至 5个新钱包。', rank:'异动'}],
-            airdrops: [{title:'Berachain V2', body:'最后交互测试阶段，务必完成质押。', rank:'必做'}]
-        };
-        (mocks[type] || []).map(sanitize).forEach(m => addCard(type.toUpperCase(), m.title, m.body, '', m.rank));
-    }
-
-    function addCard(tag, title, body, addr, rank) {
-        const div = document.createElement('div');
-        div.className = 'card';
-        const isToken = !!addr;
-        div.innerHTML = `
-            <span class="tag">${tag}</span>
-            <div class="title-row">
-                <div class="title">${title}</div>
-                <div class="rank">${rank}</div>
-            </div>
-            <div class="desc">${body}</div>
-            ${addr ? `<div class="ca-box">CA: ${addr}</div>` : ''}
-            <div class="btn-group">
-                <div class="action-btn" onclick="window.open('${isToken ? 'https://dexscreener.com/solana/'+addr : 'https://twitter.com/search?q='+title}')">${isToken?'看K线 📈':'看教程 📖'}</div>
-                <div class="action-btn" onclick="${isToken ? `copyText('${addr}', this)` : `window.open('https://google.com/search?q=${title}+official')`}">${isToken?'复制CA 📋':'去官网 🌐'}</div>
-                <div class="action-btn primary" onclick="shareMe('${tag}', '${title}')">转发 📤</div>
-            </div>`;
-        stream.prepend(div);
-    }
-
-    function addWhaleCard(title, body, rank) {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `
-            <span class="tag whale-tag">巨鲸审计</span>
-            <div class="title-row">
-                <div class="title">${title}</div>
-                <div class="rank" style="background:rgba(255,159,10,0.1); color:#ff9f0a;">${rank}</div>
-            </div>
-            <div class="desc">${body}</div>
-            <div class="btn-group">
-                <div class="action-btn" onclick="window.open('https://solscan.io/account/${title.split(' ')[1]}')">追踪地址 🕵️</div>
-                <div class="action-btn" onclick="copyText('${title.split(' ')[1]}', this)">复制地址</div>
-                <div class="action-btn primary" onclick="shareMe('巨鲸异动', '${title}')">转发 📤</div>
-            </div>`;
-        stream.prepend(div);
-    }
-
-    // 转发逻辑也需要防止 undefined
-    function shareMe(tag, title) {
-        // 如果传入的变量依然可能是 undefined，这里做一个兜底
-        const safeTitle = (title && title !== "undefined") ? title : "龙马 Alpha";
-        const safeTag = (tag && tag !== "undefined") ? tag : "情报";
-        
-        const text = `【龙马 Longma·实时情报】\n项目：[${safeTag}] ${safeTitle}\n状态：通过链上安全初筛\n查看研报：${window.location.href}`;
-        if (navigator.share) {
-            navigator.share({ title: '龙马实时情报', text: text, url: window.location.href });
-        } else {
-            copyText(text);
-            alert("情报已复制，可前往 X/微信 转发。");
-        }
-    }
-
-    function copyText(text, el) {
-        if(!text) return;
-        navigator.clipboard.writeText(text);
-        if(el) { const old = el.innerHTML; el.innerHTML = "已复制"; setTimeout(()=>el.innerHTML=old, 2000); }
-    }
-
-    function handleSearch() {
-        const val = document.getElementById('userInput').value;
-        if(val) fetchData('tokens');
-    }
-
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString('zh-CN', {hour12: false});
-        if(Math.random() > 0.8) {
-            const logs = ["MONITORING_CHAIN", "SYNCING_CLOUD", "UPDATING_ALPHA"];
-            sysLog.innerHTML = `<span class="live-dot"></span>LONGMA: ${logs[Math.floor(Math.random()*logs.length)]}`;
-        }
-    }, 1000);
-
-    // 默认加载
-    window.onload = () => fetchData('tokens');
+    setInterval(updateGas, 10000);
 </script>
+
 </body>
 </html>
