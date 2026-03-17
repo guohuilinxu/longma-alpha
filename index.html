@@ -3,48 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>龙马智能情报站 - 限时免费</title>
+    <title>龙马 Alpha - 社群情报</title>
     <style>
-        body { background: #050505; color: #d4af37; font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
-        .card { background: #111; border: 1px solid #d4af37; padding: 25px; border-radius: 20px; max-width: 400px; margin: 20px auto; }
-        .price-row { display: flex; justify-content: space-around; background: #1a1a1a; padding: 12px; border-radius: 12px; margin-bottom: 20px; border-bottom: 2px solid #333; }
-        .alpha-box { background: #222; padding: 15px; border-radius: 12px; margin: 15px 0; border-left: 4px solid #00ff00; text-align: left; }
-        .free-tag { background: #00ff00; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .btn { background: #fff; color: #000; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        body { background: #0b0e14; color: #e1e1e1; font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+        .header { background: #161a1e; padding: 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #2b2f36; }
+        .tab-menu { display: flex; gap: 20px; font-size: 14px; color: #848e9c; overflow-x: auto; padding: 5px 0; }
+        .active { color: #fff; border-bottom: 2px solid #007aff; padding-bottom: 5px; }
+        
+        /* 顶部警告条 */
+        .banner { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; margin: 15px; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; }
+        .vip-btn { background: #f0b90b; color: #000; border: none; padding: 6px 15px; border-radius: 15px; font-weight: bold; margin-left: auto; }
+
+        /* 时间轴列表 */
+        .timeline { padding: 0 15px 80px 15px; }
+        .date-label { background: #1e2329; color: #848e9c; display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin: 20px 0 15px 0; }
+        .time-mark { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .info-card { border-left: 2px solid #3b424d; padding-left: 20px; margin-left: 5px; position: relative; }
+        .info-card::before { content: ''; width: 8px; height: 8px; background: #007aff; border-radius: 50%; position: absolute; left: -5px; top: 8px; }
+        
+        .project-title { color: #007aff; font-size: 16px; font-weight: bold; margin-bottom: 10px; }
+        .content-box { background: #161a1e; padding: 15px; border-radius: 8px; line-height: 1.6; font-size: 14px; color: #b7bdc6; }
+        .tags { display: flex; gap: 10px; margin-top: 15px; }
+        .tag-item { background: #2b2f36; padding: 4px 12px; border-radius: 4px; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+
+        /* 底部导航 */
+        .footer { position: fixed; bottom: 15px; width: 100%; display: flex; justify-content: center; }
+        .join-btn { background: #007aff; color: #fff; padding: 12px 40px; border-radius: 25px; font-weight: bold; text-decoration: none; box-shadow: 0 4px 15px rgba(0,122,255,0.3); }
     </style>
 </head>
 <body>
-    <p style="font-size: 12px; color: #888;">🐲 龙马智能系统：实时算力已就绪</p>
-    
-    <div class="price-row">
-        <div>BTC <span id="btc" style="color:#fff;">...</span></div>
-        <div>SOL <span id="sol" style="color:#fff;">...</span></div>
+    <div class="header">
+        <div class="tab-menu">
+            <span>社群广场</span>
+            <span class="active">社群信息</span>
+            <span>钱包监控</span>
+            <span>共振信号</span>
+        </div>
     </div>
 
-    <div class="card">
-        <span class="free-tag">限时免费公开</span>
-        <h3 style="margin: 15px 0;">[今日严谨 Alpha 信号]</h3>
+    <div class="banner">
+        <span style="font-size: 20px;">⚠️</span>
+        <div style="font-size: 12px;">您暂未订阅龙马 VIP，无法查看最近 15 分钟的深度研报</div>
+        <button class="vip-btn" onclick="alert('限时免费期，关注推特即可获取！')">订阅 VIP</button>
+    </div>
+
+    <div class="timeline">
+        <div class="date-label">3月17日 周二 2026</div>
         
-        <div class="alpha-box">
-            <p style="margin: 5px 0; font-size: 14px; color: #aaa;">重点监控标的：</p>
-            <strong style="font-size: 18px; color: #fff;">$ASTER (解锁对冲机会)</strong>
-            <p style="margin: 10px 0 5px 0; font-size: 14px;">建议入场：<span style="color:#00ff00;">$0.125 - $0.132</span></p>
-            <p style="margin: 0; font-size: 14px;">预期目标：+45% 震荡套利</p>
+        <div class="time-mark">11:04</div>
+        <div class="info-card">
+            <div class="project-title">龙马 AI 总结：$DSNT 深度解析</div>
+            <div class="content-box">
+                社群讨论了 $DSNT 协议的真实性。龙马系统抓取到项目方地址在 3:20 分有小额测试转账，情绪表现为【谨慎看多】。当前链上筹码分布极度集中，散户持仓不足 5%，主力合围迹象明显。建议密切关注 0.045 支撑位，若跌破则逻辑失效。
+            </div>
+            <div class="tags">
+                <div class="tag-item">DSNT 📋</div>
+                <div class="tag-item">深度分析 🔭</div>
+                <div class="tag-item" style="color:#007aff">看K线 📈</div>
+            </div>
         </div>
 
-        <p style="font-size: 13px; color: #888;">龙马已完成该项目 5590 万美元解锁压盘分析，目前散户恐慌，正是高手切入点。</p>
-        
-        <button class="btn" onclick="location.href='https://twitter.com/你的用户名'">关注主理人推特获取实时推文</button>
+        <div class="date-label">历史回顾</div>
+        <div class="time-mark">02:59</div>
+        <div class="info-card" style="border-left-color: #2b2f36;">
+            <div class="project-title" style="color:#848e9c">龙马 AI：ELT 实验项目警告</div>
+            <div class="content-box" style="opacity: 0.6;">
+                用户 A 分享了 ELT 代币合约，龙马识别为实验性代理发行。整体情绪偏向【实验性极高且谨慎】。AI 交易速度虽快，但流动性不足，建议用户自行评估风险。
+            </div>
+        </div>
     </div>
 
-    <script>
-        async function up() {
-            const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=["BTCUSDT","SOLUSDT"]');
-            const d = await r.json();
-            document.getElementById('btc').innerText = '$' + parseInt(d[0].price).toLocaleString();
-            document.getElementById('sol').innerText = '$' + parseFloat(d[1].price).toFixed(2);
-        }
-        setInterval(up, 3000); up();
-    </script>
+    <div class="footer">
+        <a href="https://twitter.com/你的推特" class="join-btn">关注主理人 领取免费研报</a>
+    </div>
 </body>
 </html>
