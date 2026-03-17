@@ -124,3 +124,56 @@
 </script>
 </body>
 </html>
+<script>
+    // 定义一个真实的合约地址（这里用 $LONGMA 模拟，你可以换成变量）
+    const MOCK_ADDR = "6p6W5qSbeUTuXvYS93v2YQu6T63H5F1zT2y2y2y2y2y"; // 模拟地址
+
+    function addCard(tag, title, body) {
+        // 为了演示，我们给每个卡片分配一个模拟地址
+        const tokenAddr = MOCK_ADDR; 
+        
+        const card = `
+            <div class="data-card">
+                <div class="card-meta"><span style="color:var(--blue)">[${tag}]</span><span>2026-03-17</span></div>
+                <div style="font-weight:bold; font-size:18px; margin-bottom:10px;">${title}</div>
+                <div style="font-size:13px; color:#666; line-height:1.5;">${body}</div>
+                
+                <div class="op-row">
+                    <div class="op-btn" onclick="window.open('https://dexscreener.com/solana/${tokenAddr}')">看K线 📈</div>
+                    
+                    <div class="op-btn" onclick="copyToClipboard('${tokenAddr}', this)">复制地址 📋</div>
+                    
+                    <div class="op-btn" onclick="window.open('https://twitter.com/search?q=${title}')">深度研报 🔭</div>
+                    
+                    <div class="op-btn" onclick="shareContent('${title}', '${body}')">分享 📤</div>
+                </div>
+            </div>`;
+        document.getElementById('mainStream').innerHTML = card + document.getElementById('mainStream').innerHTML;
+    }
+
+    // 实装复制功能
+    function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "已复制 ✅";
+            btn.style.color = "var(--green)";
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.color = "";
+            }, 2000);
+        });
+    }
+
+    // 实装分享功能
+    function shareContent(title, text) {
+        if (navigator.share) {
+            navigator.share({
+                title: '龙马 AI 情报: ' + title,
+                text: text,
+                url: window.location.href,
+            });
+        } else {
+            alert('当前浏览器不支持原生分享，请手动复制链接');
+        }
+    }
+</script>
